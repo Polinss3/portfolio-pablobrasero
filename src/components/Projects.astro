@@ -1,0 +1,83 @@
+---
+// TAGS
+import HTML from "./icons/tags/HTML.astro"
+import CSS from "./icons/tags/CSS.astro"
+import JAVASCRIPT from "./icons/tags/JavaScript.astro"
+import ASTRO from "./icons/tags/AstroIcon.astro"
+import TAILWIND from "./icons/tags/Tailwind.astro"
+import PYTHON from "./icons/tags/Python.astro"
+
+const TAGS = {
+    HTML: {
+        name: "HTML",
+        class: "bg-gray-800 border rounded light:text-orange-600 dark:text-orange-400 border-orange-500 dark:bg-gray-700",
+        icon: HTML,
+    },
+    CSS: {
+        name: "CSS",
+        class: "bg-gray-800 border rounded light:text-blue-900 dark:text-blue-300 border-blue-400 dark:bg-gray-700",
+        icon: CSS,
+    },
+    JAVASCRIPT: {
+        name: "JavaScript",
+        class: "bg-gray-800 border rounded light:text-yellow-900 dark:text-yellow-300 border-yellow-400 dark:bg-gray-700",
+        icon: JAVASCRIPT,
+    },
+    ASTRO: {
+        name: "Astro",
+        class: "bg-gray-800 border rounded light:text-indigo-900 dark:text-indigo-300 border-indigo-400 dark:bg-gray-700",
+        icon: ASTRO,
+    },
+    TAILWIND: {
+        name: "Tailwind CSS",
+        class: "bg-gray-800 border rounded light:text-cyan-900 dark:text-cyan-300 border-cyan-400 dark:bg-gray-700",
+        icon: TAILWIND,
+    },
+    PYTHON: {
+        name: "Python",
+        class: "bg-gray-800 border rounded light:text-green-900 dark:text-green-300 border-green-400 dark:bg-gray-700",
+        icon: PYTHON,
+    },
+}
+
+const PROJECTS = [
+  {
+    title: "Pagina web desarrollada con Astro",
+    description:
+      "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    image: "https://via.placeholder.com/500x300",
+    link: "https://www.google.com",
+    github: "https://www.github.com",
+    tags: [TAGS.HTML, TAGS.ASTRO, TAGS.TAILWIND, TAGS.JAVASCRIPT, TAGS.CSS, TAGS.PYTHON],
+  },
+  {
+    title: "Project 1",
+    description: "This is a description of project 1",
+    image: "https://via.placeholder.com/300x200",
+    link: "https://www.google.com",
+    github: "https://www.github.com",
+    tags: [TAGS.HTML, TAGS.ASTRO, TAGS.PYTHON],
+  }
+]
+---
+
+{
+  PROJECTS.map(({ title, description, tags, image, link, github }) => (
+    <article class="flex flex-col py-8">
+      <img class="rounded-lg drop-shadow-2xl" src={image} alt={`Captura de pantalla de ${title}`} />
+      <div class="flex flex-row justify-between py-2">
+        <h3 class="min-w-44 md:min-w-72 mr-10 md:text-xl lg:text-2xl font-semibold">
+          {title}
+        </h3>
+        <ul class="flex flex-row flex-wrap gap-x-2 gap-y-2">
+          {tags.map((tag) => (
+            <li class={`flex flex-row justify-center content-center items-center gap-x-1 text-xs font-medium px-2 rounded-md  ${tag.class}`}>
+                <tag.icon class="size-4"/> {tag.name}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <p class="text-pretty opacity-80">{description}</p>
+    </article>
+  ))
+}
