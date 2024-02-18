@@ -21,10 +21,12 @@ import Profile from "../components/icons/Profile.astro";
 ---
 
 <Layout title="Portfolio de Pablo Brasero - Desarrollador y programador Web">
-  <main class="px-4 sm:px-10 flex flex-col justify-center content-center items-center">
+  <main
+    class="px-10 flex flex-col justify-center content-center items-center"
+  >
     <SectionContainer id="top" class="pt-56 pb-32">
       <h1
-        class="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold flex flex-row flex-wrap gap-x-4 pb-4"
+        class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold flex flex-row flex-wrap gap-x-4 pb-4"
       >
         Hi, I'm Pablo Brasero
         <a
@@ -37,8 +39,8 @@ import Profile from "../components/icons/Profile.astro";
         </a>
       </h1>
       <h2 class="text-lg sm:text-2xl text-wrap max-w-[700px]">
-        <span>+4 years of experience.</span><span
-          class="bg-gradient-to-b from-cyan-50 to-cyan-400 bg-clip-text text-transparent"
+        <span>+4 years of experience. </span><span
+          class="bg-gradient-to-b from-cyan-900 to-cyan-500 dark:from-cyan-50 dark:to-cyan-400 bg-clip-text text-transparent"
           >Web developer and programmer.
         </span><span>Madrid, Spain.</span>
         <span></span>Especialized in creating solutions
@@ -64,7 +66,7 @@ import Profile from "../components/icons/Profile.astro";
 
     <SectionContainer id="experience" class="pt-18">
       <h2 class="text-2xl font-semibold mb-6 flex gap-x-3 items-center">
-        <Briefcase class="size-7" />Work Experience
+        <Briefcase class="size-7" />Experience
       </h2>
       <Exprerience />
     </SectionContainer>
@@ -89,6 +91,7 @@ import Profile from "../components/icons/Profile.astro";
       </h2>
       <Education />
     </SectionContainer>
-    
   </main>
 </Layout>
+
+
