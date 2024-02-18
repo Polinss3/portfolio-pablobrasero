@@ -63,20 +63,18 @@ const PROJECTS = [
 
 {
   PROJECTS.map(({ title, description, tags, image, link, github }) => (
-    <article class="flex flex-col py-8">
+    <article class="flex flex-col py-8 gap-y-2">
       <img class="rounded-lg shadow-md shadow-black/50 dark:shadow-white/50" src={image} alt={`Captura de pantalla de ${title}`} />
-      <div class="flex flex-row justify-between py-2">
         <h3 class="min-w-44 md:min-w-72 mr-10 md:text-xl lg:text-2xl font-semibold">
           {title}
         </h3>
         <ul class="flex flex-row flex-wrap gap-x-2 gap-y-2">
           {tags.map((tag) => (
-            <li class={`flex flex-row justify-center content-center items-center gap-x-1 text-xs font-medium px-2 rounded-md  ${tag.class}`}>
+            <li class={`flex flex-row justify-center content-center items-center gap-x-1 text-xs font-medium px-2 py-1 rounded-md  ${tag.class}`}>
                 <tag.icon class="size-4"/> {tag.name}
             </li>
           ))}
         </ul>
-      </div>
       <p class="text-pretty opacity-80">{description}</p>
     </article>
   ))
