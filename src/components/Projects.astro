@@ -6,6 +6,7 @@ import JAVASCRIPT from "./icons/tags/JavaScript.astro"
 import ASTRO from "./icons/tags/AstroIcon.astro"
 import TAILWIND from "./icons/tags/Tailwind.astro"
 import PYTHON from "./icons/tags/Python.astro"
+import WORDPRESS from "./icons/tags/WordPress.astro"
 
 const TAGS = {
     HTML: {
@@ -15,7 +16,7 @@ const TAGS = {
     },
     CSS: {
         name: "CSS",
-        class: "bg-gray-200 dark:bg-gray-800 border rounded light:text-blue-900 dark:text-blue-300 border-blue-400 dark:bg-gray-700",
+        class: "bg-gray-200 dark:bg-gray-800 border rounded light:text-blue-800 dark:text-blue-200 border-blue-400 dark:bg-gray-700",
         icon: CSS,
     },
     JAVASCRIPT: {
@@ -38,6 +39,11 @@ const TAGS = {
         class: "bg-gray-200 dark:bg-gray-800 border rounded light:text-green-900 dark:text-green-300 border-green-400 dark:bg-gray-700",
         icon: PYTHON,
     },
+    WORDPRESS: {
+        name: "WordPress",
+        class: "bg-gray-200 dark:bg-gray-800 border rounded light:text-blue-900 dark:text-blue-300 border-blue-400 dark:bg-gray-700",
+        icon: WORDPRESS,
+    },
 }
 
 const PROJECTS = [
@@ -56,7 +62,7 @@ const PROJECTS = [
     image: "https://via.placeholder.com/500x300",
     link: "https://www.google.com",
     github: "https://www.github.com",
-    tags: [TAGS.HTML, TAGS.ASTRO, TAGS.PYTHON],
+    tags: [TAGS.HTML, TAGS.ASTRO, TAGS.PYTHON, TAGS.WORDPRESS],
   }
 ]
 ---
