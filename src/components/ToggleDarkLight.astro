@@ -54,7 +54,7 @@
 
   // Cargar la preferencia guardada
   document.addEventListener("DOMContentLoaded", () => {
-    const isDarkMode = JSON.parse(localStorage.getItem("darkMode") || "false");
+    const isDarkMode = JSON.parse(localStorage.getItem("darkMode") || "true");
     if (isDarkMode) {
       document.documentElement.classList.add("dark");
     }
