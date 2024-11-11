@@ -8,6 +8,8 @@ import TAILWIND from "./icons/tags/Tailwind.astro";
 import PYTHON from "./icons/tags/Python.astro";
 import WORDPRESS from "./icons/tags/WordPress.astro";
 import NEXTJS from "./icons/tags/NextJS.astro";
+import FASTAPI from "./icons/tags/FastAPI.astro";
+import DOCKER from "./icons/tags/docker.astro";
 
 const TAGS = {
   HTML: {
@@ -58,6 +60,18 @@ const TAGS = {
       "bg-gray-200 dark:bg-gray-800 border rounded light:text-black dark:text-white border-black dark:bg-gray-700",
     icon: NEXTJS,
   },
+  FASTAPI: {
+    name: "FastAPI",
+    class:
+      "bg-gray-200 dark:bg-gray-800 border rounded light:text-green-900 dark:text-green-300 border-green-400 dark:bg-gray-700",
+    icon: FASTAPI,
+  },
+  DOCKER: {
+    name: "Docker",
+    class:
+      "bg-gray-200 dark:bg-gray-800 border rounded light:text-blue-900 dark:text-blue-300 border-blue-400 dark:bg-gray-700",
+    icon: DOCKER,
+  },
 };
 
 const PROJECTS = [
@@ -74,10 +88,10 @@ const PROJECTS = [
     title: "Multifunctional API Project with FastAPI and Docker",
     description: `This repository contains a set of microservices developed with Python and FastAPI to provide various functionalities through a scalable and accessible API. The project includes integrations for chatbots, AI-powered image generation, and general-purpose tools like calculators and other customizable applications.
                   Each microservice is encapsulated in Docker containers and managed with Docker Compose to enable seamless deployment across different environments. The modular structure allows for easy expansion and customization of functionalities to fit various use cases.`,
-    image: "https://via.placeholder.com/500x300",
+    image: "/projects/fastAPI-thumbnail.png",
     link: "",
-    github: "",
-    tags: [TAGS.PYTHON],
+    github: "https://github.com/Polinss3/fastAPI-project",
+    tags: [TAGS.PYTHON, TAGS.FASTAPI, TAGS.DOCKER]
   },
 ];
 ---
