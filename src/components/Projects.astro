@@ -1,15 +1,16 @@
 ---
 // TAGS
-import HTML from "./icons/tags/HTML.astro";
-import CSS from "./icons/tags/CSS.astro";
-import JAVASCRIPT from "./icons/tags/JavaScript.astro";
-import ASTRO from "./icons/tags/AstroIcon.astro";
-import TAILWIND from "./icons/tags/Tailwind.astro";
-import PYTHON from "./icons/tags/Python.astro";
-import WORDPRESS from "./icons/tags/WordPress.astro";
-import NEXTJS from "./icons/tags/NextJS.astro";
-import FASTAPI from "./icons/tags/FastAPI.astro";
-import DOCKER from "./icons/tags/Docker.astro";
+import HTML from "@/components/icons/tags/HTML.astro";
+import CSS from "@/components/icons/tags/CSS.astro";
+import JAVASCRIPT from "@/components/icons/tags/JavaScript.astro";
+import ASTRO from "@/components/icons/tags/AstroIcon.astro";
+import TAILWIND from "@/components/icons/tags/Tailwind.astro";
+import PYTHON from "@/components/icons/tags/Python.astro";
+import WORDPRESS from "@/components/icons/tags/WordPress.astro";
+import NEXTJS from "@/components/icons/tags/NextJS.astro";
+import FASTAPI from "@/components/icons/tags/FastAPI.astro";
+import DOCKER from "@/components/icons/tags/Docker.astro";
+import RedirectionButton from "@/components/RedirectionButton.astro";
 
 const TAGS = {
   HTML: {
@@ -117,6 +118,14 @@ const PROJECTS = [
         ))}
       </ul>
       <p class="text-pretty opacity-80">{description}</p>
+      <div class="flex gap-4">
+  {link && (
+    <RedirectionButton type="Web" link={link} />
+  )}
+  {github && (
+    <RedirectionButton type="GitHub" link={github}/>
+  )}
+</div>
     </article>
   ))
 }
