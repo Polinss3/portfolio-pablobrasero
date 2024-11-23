@@ -11,6 +11,7 @@ import NEXTJS from "@/components/icons/tags/NextJS.astro";
 import FASTAPI from "@/components/icons/tags/FastAPI.astro";
 import DOCKER from "@/components/icons/tags/Docker.astro";
 import RedirectionButton from "@/components/RedirectionButton.astro";
+import GITHUB from "@/components/icons/tags/GitHub.astro";
 
 const TAGS = {
   HTML: {
@@ -73,6 +74,12 @@ const TAGS = {
       "bg-gray-200 dark:bg-gray-800 border rounded light:text-blue-900 dark:text-blue-300 border-blue-400 dark:bg-gray-700",
     icon: DOCKER,
   },
+  GITHUB: {
+    name: "GitHub",
+    class:
+      "bg-gray-200 dark:bg-gray-800 border rounded light:text-black dark:text-white border-black dark:bg-gray-700",
+    icon: GITHUB,
+  },
 };
 
 const PROJECTS = [
@@ -92,7 +99,15 @@ const PROJECTS = [
     image: "/projects/fastAPI-thumbnail.png",
     link: "",
     github: "https://github.com/Polinss3/fastAPI-project",
-    tags: [TAGS.PYTHON, TAGS.FASTAPI, TAGS.DOCKER]
+    tags: [TAGS.PYTHON, TAGS.FASTAPI, TAGS.DOCKER],
+  },
+  {
+    title: "Python Games Collection",
+    description: `This project contains implementations of classic games in Python, using Pygame for an interactive and fun experience. Each game is contained within its own folder, complete with the main game code, unit tests, and detailed instructions for playing. Whether you’re looking to enjoy these classic games or learn from their code, this collection has something for everyone!`,
+    image: "/projects/Python-logo.png",
+    link: "",
+    github: "https://github.com/Polinss3/python-games",
+    tags: [TAGS.PYTHON, TAGS.GITHUB],
   },
 ];
 ---
@@ -103,7 +118,7 @@ const PROJECTS = [
       <img
         class="rounded-lg shadow-md shadow-black/50 dark:shadow-white/50"
         src={image}
-        alt={`Captura de pantalla de ${title}`}
+        alt={`${title} screenshot`}
       />
       <h3 class="min-w-44 md:min-w-72 mr-10 md:text-xl lg:text-2xl font-semibold">
         {title}
@@ -119,13 +134,9 @@ const PROJECTS = [
       </ul>
       <p class="text-pretty opacity-80">{description}</p>
       <div class="flex gap-4">
-  {link && (
-    <RedirectionButton type="Web" link={link} />
-  )}
-  {github && (
-    <RedirectionButton type="GitHub" link={github}/>
-  )}
-</div>
+        {link && <RedirectionButton type="Web" href={link} />}
+        {github && <RedirectionButton type="GitHub" href={github} />}
+      </div>
     </article>
   ))
 }
