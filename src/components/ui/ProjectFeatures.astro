@@ -1,0 +1,75 @@
+---
+interface Feature {
+  title: string;
+  description: string;
+  icon: string;
+}
+
+interface Props {
+  features: Feature[];
+  githubUrl: string;
+  liveUrl?: string;
+}
+
+const { features, githubUrl, liveUrl } = Astro.props;
+---
+
+<div class="max-w-6xl mx-auto px-4">
+  <div class="grid grid-cols-5 grid-rows-5 gap-4">
+    <!-- Feature 1: Large card -->
+    <div class="col-span-2 row-span-2 bg-gray-800/30 rounded-xl p-6 backdrop-blur-sm hover:bg-gray-800/40 transition-all duration-300 border border-cyan-500/20 hover:border-cyan-500/40 shadow-lg hover:shadow-cyan-500/10">
+      <span class="text-3xl mb-4 block">{features[0].icon}</span>
+      <h3 class="text-xl font-semibold text-gray-100 mb-3">{features[0].title}</h3>
+      <p class="text-gray-300">{features[0].description}</p>
+    </div>
+
+    <!-- Feature 2: Wide card -->
+    <div class="col-span-2 col-start-3 bg-gray-800/30 rounded-xl p-6 backdrop-blur-sm hover:bg-gray-800/40 transition-all duration-300 border border-purple-500/20 hover:border-purple-500/40 shadow-lg hover:shadow-purple-500/10">
+      <span class="text-2xl mb-3 block">{features[1].icon}</span>
+      <h3 class="text-lg font-semibold text-gray-100 mb-2">{features[1].title}</h3>
+      <p class="text-sm text-gray-300">{features[1].description}</p>
+    </div>
+
+    <!-- Feature 3: Small card -->
+    <div class="col-start-3 row-start-2 bg-gray-800/30 rounded-xl p-4 backdrop-blur-sm hover:bg-gray-800/40 transition-all duration-300 border border-blue-500/20 hover:border-blue-500/40 shadow-lg hover:shadow-blue-500/10">
+      <span class="text-xl mb-2 block">{features[2].icon}</span>
+      <h3 class="text-base font-semibold text-gray-100">{features[2].title}</h3>
+    </div>
+
+    <!-- Feature 4: Small card -->
+    <div class="col-start-4 row-start-2 bg-gray-800/30 rounded-xl p-4 backdrop-blur-sm hover:bg-gray-800/40 transition-all duration-300 border border-teal-500/20 hover:border-teal-500/40 shadow-lg hover:shadow-teal-500/10">
+      <span class="text-xl mb-2 block">{features[3].icon}</span>
+      <h3 class="text-base font-semibold text-gray-100">{features[3].title}</h3>
+    </div>
+  </div>
+
+  <!-- Project Links -->
+  <div class="mt-12 flex justify-center gap-4">
+    <a
+      class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-cyan-500/20 hover:border-cyan-500/40 bg-gray-800/30 text-white hover:bg-gray-800/50 transition-all duration-300"
+      href={githubUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      GitHub
+      <svg class="flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </a>
+    {liveUrl && (
+      <a
+        class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-purple-500/20 hover:border-purple-500/40 bg-gray-800/30 text-white hover:bg-gray-800/50 transition-all duration-300"
+        href={liveUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <svg class="flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Live Demo
+      </a>
+    )}
+  </div>
+</div>
+
+<style>
+  .grid {
+    min-height: 400px;
+  }
+</style> 

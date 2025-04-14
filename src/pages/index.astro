@@ -1,21 +1,21 @@
 ---
 import Layout from "../layouts/Layout.astro";
 // COMPONENTS
-import Projects from "../components/Projects.astro";
-import Badge from "../components/Badge.astro";
-import SocialPill from "../components/SocialPill.astro";
-import Exprerience from "../components/Experience.astro";
-import SectionContainer from "../components/SectionContainer.astro";
-import Education from "../components/Education.astro";
-import AboutMe from "../components/AboutMe.astro";
+import Projects from "../components/sections/Projects.astro";
+import Badge from "../components/ui/Badge.astro";
+import SocialPill from "../components/ui/SocialPill.astro";
+import Experience from "../components/sections/Experience.astro";
+import SectionContainer from "../components/layout/SectionContainer.astro";
+import Education from "../components/sections/Education.astro";
+import AboutMe from "../components/sections/AboutMe.astro";
 // ICONS
-import LinkedIn from "../components/icons/LinkedIn.astro";
-import GitHub from "../components/icons/tags/GitHub.astro";
-import Briefcase from "../components/icons/Briefcase.astro";
-import DescargaArchivo from "../components/icons/DescargaArchivo.astro";
-import Terminal from "../components/icons/Terminal.astro";
-import Books from "../components/icons/Books.astro";
-import Profile from "../components/icons/Profile.astro";
+import LinkedIn from "@/components/icons/LinkedIn.astro";
+import GitHub from "@/components/icons/tags/GitHub.astro";
+import Briefcase from "@/components/icons/Briefcase.astro";
+import DescargaArchivo from "@/components/icons/DescargaArchivo.astro";
+import Terminal from "@/components/icons/Terminal.astro";
+import Books from "@/components/icons/Books.astro";
+import Profile from "@/components/icons/Profile.astro";
 ---
 
 <Layout title="Portfolio de Pablo Brasero - Desarrollador y programador Web">
@@ -66,7 +66,7 @@ import Profile from "../components/icons/Profile.astro";
       <h2 class="text-2xl font-semibold mb-6 flex gap-x-3 items-center">
         <Briefcase class="size-7" />Experience
       </h2>
-      <Exprerience />
+      <Experience />
     </SectionContainer>
 
     <SectionContainer id="projects" class="pt-40 pb-20">

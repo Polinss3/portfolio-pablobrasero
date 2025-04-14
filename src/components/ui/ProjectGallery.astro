@@ -1,0 +1,126 @@
+---
+interface Props {
+  images: string[];
+}
+
+const { images } = Astro.props;
+---
+
+<div class="relative max-w-2xl mx-auto overflow-hidden rounded-xl">
+  <div class="flex transition-transform duration-500 ease-in-out" id="carousel">
+    {
+      images.map((image, index) => (
+        <div class="w-full flex-shrink-0 flex items-center justify-center p-8 bg-gray-900/30">
+          <img
+            src={image}
+            alt={`Project screenshot ${index + 1}`}
+            class="max-w-[400px] max-h-[300px] w-auto h-auto object-contain"
+            loading={index === 0 ? "eager" : "lazy"}
+          />
+        </div>
+      ))
+    }
+  </div>
+
+  <!-- Navigation buttons -->
+  <button
+    class="absolute left-4 top-1/2 -translate-y-1/2 bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-full backdrop-blur-sm transition-colors"
+    id="prevBtn"
+    aria-label="Previous image"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    </svg>
+  </button>
+  
+  <button
+    class="absolute right-4 top-1/2 -translate-y-1/2 bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-full backdrop-blur-sm transition-colors"
+    id="nextBtn"
+    aria-label="Next image"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+    </svg>
+  </button>
+
+  <!-- Indicators -->
+  <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+    {
+      images.map((_, index) => (
+        <button
+          class="w-2 h-2 rounded-full bg-white/50 hover:bg-white/75 transition-colors"
+          data-index={index}
+          aria-label={`Go to slide ${index + 1}`}
+        />
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  const carousel = document.getElementById('carousel') as HTMLElement;
+  const prevBtn = document.getElementById('prevBtn') as HTMLButtonElement;
+  const nextBtn = document.getElementById('nextBtn') as HTMLButtonElement;
+  const indicators = document.querySelectorAll('[data-index]');
+  let currentIndex = 0;
+  const totalSlides = indicators.length;
+
+  function updateCarousel() {
+    carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+    // Update indicators
+    indicators.forEach((indicator, index) => {
+      if (index === currentIndex) {
+        indicator.classList.add('bg-white');
+        indicator.classList.remove('bg-white/50');
+      } else {
+        indicator.classList.remove('bg-white');
+        indicator.classList.add('bg-white/50');
+      }
+    });
+  }
+
+  function goToSlide(index: number) {
+    currentIndex = index;
+    updateCarousel();
+  }
+
+  prevBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+    updateCarousel();
+  });
+
+  nextBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex + 1) % totalSlides;
+    updateCarousel();
+  });
+
+  indicators.forEach((indicator, index) => {
+    indicator.addEventListener('click', () => goToSlide(index));
+  });
+
+  // Auto-advance every 5 seconds
+  setInterval(() => {
+    currentIndex = (currentIndex + 1) % totalSlides;
+    updateCarousel();
+  }, 5000);
+
+  // Initial state
+  updateCarousel();
+</script>
+
+<style>
+  .flex {
+    display: flex;
+    width: 100%;
+  }
+
+  .flex > div {
+    width: 100%;
+    flex: none;
+  }
+
+  button:focus {
+    outline: 2px solid #60A5FA;
+    outline-offset: 2px;
+  }
+</style> 

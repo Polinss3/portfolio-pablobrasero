@@ -1,0 +1,77 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ProjectHero from "../../components/ui/ProjectHero.astro";
+import ProjectGallery from "../../components/ui/ProjectGallery.astro";
+import ProjectFeatures from "../../components/ui/ProjectFeatures.astro";
+---
+
+<Layout title="Python Games Collection - Pablo Brasero">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="space-y-24">
+      <ProjectHero
+        title="Python Games Collection"
+        subtitle="A collection of classic mini-games"
+        description="A collection of classic mini-games developed in Python, including games like Tic-Tac-Toe, Snake, and more. Each game is designed as a standalone project to showcase programming skills, focusing on clean code, modularity, and functionality."
+        githubUrl="https://github.com/Polinss3/python-games"
+        tags={["Python", "Pygame", "Game Development", "OOP", "Unit Testing"]}
+      />
+
+      <div class="py-12">
+        <h2 class="text-3xl font-bold text-center mb-12 text-gray-100">Project Screenshots</h2>
+        <ProjectGallery
+          images={[
+            "/projects/python-games/snake.jpg",
+            "/projects/python-games/space-invaders.jpg",
+            "/projects/python-games/2048.jpg",
+            "/projects/python-games/pong.jpg",
+          ]}
+        />
+      </div>
+
+      <div class="py-12">
+        <h2 class="text-3xl font-bold text-center mb-12 text-gray-100">Key Features</h2>
+        <ProjectFeatures
+          features={[
+            {
+              title: "Multiple Games",
+              description: "Collection of 7 classic games including Snake, Space Invaders, 2048, Pong, and more.",
+              icon: "🎮",
+            },
+            {
+              title: "Clean Code",
+              description: "Well-structured code following Python best practices and object-oriented programming principles.",
+              icon: "🧹",
+            },
+            {
+              title: "Unit Testing",
+              description: "Comprehensive test coverage for each game to ensure reliability and maintainability.",
+              icon: "🧪",
+            },
+            {
+              title: "Pygame Integration",
+              description: "Utilizes Pygame library for graphics and game mechanics, providing a smooth gaming experience.",
+              icon: "🎨",
+            },
+            {
+              title: "Modular Design",
+              description: "Each game is self-contained with its own folder, making it easy to understand and modify.",
+              icon: "📦",
+            },
+            {
+              title: "Documentation",
+              description: "Detailed README files for each game explaining how to play and run the code.",
+              icon: "📚",
+            },
+          ]}
+          githubUrl="https://github.com/Polinss3/python-games"
+        />
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  main {
+    min-height: calc(100vh - 64px);
+  }
+</style> 
