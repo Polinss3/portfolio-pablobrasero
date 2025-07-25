@@ -13,11 +13,19 @@ import ProjectFeatures from "../../components/ui/ProjectFeatures.astro";
         subtitle="Comprehensive property management solution"
         description="A comprehensive real estate management platform with frontend and web applications. This project includes a complete solution for property management, featuring user authentication, property listings, search functionality, and administrative tools. Built with modern web technologies and following best practices for scalability and maintainability."
         githubUrl="https://github.com/Polinss3/PropieXpert-frontend"
-        tags={["JavaScript", "Web Development", "Real Estate", "Full-Stack", "User Management"]}
+        tags={[
+          "JavaScript",
+          "Web Development",
+          "Real Estate",
+          "Full-Stack",
+          "User Management",
+        ]}
       />
 
       <div class="py-12">
-        <h2 class="text-3xl font-bold text-center mb-12 text-gray-100">Project Screenshots</h2>
+        <h2 class="text-3xl font-bold text-center mb-12 text-gray-100">
+          Project Screenshots
+        </h2>
         <ProjectGallery
           images={[
             "/projects/propiexpert/screenshot-1.png",
@@ -29,37 +37,45 @@ import ProjectFeatures from "../../components/ui/ProjectFeatures.astro";
       </div>
 
       <div class="py-12">
-        <h2 class="text-3xl font-bold text-center mb-12 text-gray-100">Key Features</h2>
+        <h2 class="text-3xl font-bold text-center mb-12 text-gray-100">
+          Key Features
+        </h2>
         <ProjectFeatures
           features={[
             {
               title: "Property Management",
-              description: "Complete solution for managing real estate properties with detailed listings, search, and filtering capabilities.",
+              description:
+                "Complete solution for managing real estate properties with detailed listings, search, and filtering capabilities.",
               icon: "🏠",
             },
             {
               title: "User Authentication",
-              description: "Secure user authentication system with role-based access control for different user types.",
+              description:
+                "Secure user authentication system with role-based access control for different user types.",
               icon: "🔐",
             },
             {
               title: "Search & Filter",
-              description: "Advanced search and filtering system to help users find properties that match their criteria.",
+              description:
+                "Advanced search and filtering system to help users find properties that match their criteria.",
               icon: "🔍",
             },
             {
               title: "Admin Dashboard",
-              description: "Comprehensive administrative tools for managing properties, users, and platform content.",
+              description:
+                "Comprehensive administrative tools for managing properties, users, and platform content.",
               icon: "⚙️",
             },
             {
               title: "Responsive Design",
-              description: "Fully responsive design that works seamlessly across desktop, tablet, and mobile devices.",
+              description:
+                "Fully responsive design that works seamlessly across desktop, tablet, and mobile devices.",
               icon: "📱",
             },
             {
               title: "Modern Architecture",
-              description: "Built with modern web technologies following best practices for scalability and maintainability.",
+              description:
+                "Built with modern web technologies following best practices for scalability and maintainability.",
               icon: "🏗️",
             },
           ]}
@@ -74,4 +90,5 @@ import ProjectFeatures from "../../components/ui/ProjectFeatures.astro";
   main {
     min-height: calc(100vh - 64px);
   }
-</style> 
+</style>
+
