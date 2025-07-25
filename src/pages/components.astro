@@ -1,26 +1,14 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-
-// COMPONENTS
-import Badge from "@/components/Badge.astro";
-import SectionContainer from "@/components/SectionContainer.astro";
-import SocialPill from "@/components/SocialPill.astro";
+import Layout from "../layouts/Layout.astro";
+import SectionContainer from "../components/layout/SectionContainer.astro";
+import Badge from "../components/ui/Badge.astro";
+import SocialPill from "../components/ui/SocialPill.astro";
 ---
 
-<Layout title="Design System portfolio">
-  <SectionContainer class="py-44 pb-32 flex flex-col gap-y-10">
-    <article>
-      <h1>&lt;Badge /&gt;</h1>
-      <Badge>Astro</Badge>
-      <Badge>Tailwind</Badge>
-    </article>
-
-    <article>
-      <h1>&lt;SocialPill /&gt;</h1>
-      <div class="flex flex-row gap-x-4">
-        <SocialPill>Astro</SocialPill>
-        <SocialPill>Tailwind</SocialPill>
-      </div>
-    </article>
+<Layout title="Componentes">
+  <SectionContainer>
+    <h1>&lt;Badge /&gt;</h1>
+    <Badge>Astro</Badge>
+    <Badge>Tailwind</Badge>
   </SectionContainer>
 </Layout>

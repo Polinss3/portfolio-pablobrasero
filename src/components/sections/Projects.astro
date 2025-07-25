@@ -10,7 +10,7 @@ import WORDPRESS from "@/components/icons/tags/WordPress.astro";
 import NEXTJS from "@/components/icons/tags/NextJS.astro";
 import FASTAPI from "@/components/icons/tags/FastAPI.astro";
 import DOCKER from "@/components/icons/tags/Docker.astro";
-import RedirectionButton from "@/components/RedirectionButton.astro";
+import RedirectionButton from "@/components/buttons/RedirectionButton.astro";
 import GITHUB from "@/components/icons/tags/GitHub.astro";
 
 const TAGS = {
@@ -84,13 +84,20 @@ const TAGS = {
 
 const PROJECTS = [
   {
-    title: "Next.js Components and Blog",
-    description:
-      "A collection of reusable components and a blog built with Next.js, Tailwind CSS. Tested using Jest and React Testing Library.",
-    image: "/projects/web-nextJS-thumbnail.png",
-    link: "https://web-next-js-nu.vercel.app/",
-    github: "https://github.com/Polinss3/web-next.js",
-    tags: [TAGS.NEXTJS, TAGS.HTML, TAGS.TAILWIND, TAGS.JAVASCRIPT, TAGS.CSS],
+    title: "Taps & Smiles - Digital Gifts Platform",
+    description: `A modern and elegant platform developed with Astro for creating and sending personalized digital gifts. Features include Stripe payment integration, Cloudinary image management, MongoDB database, and Resend email services. The platform offers a clean, professional design with optimized performance and responsive layout.`,
+    image: "/projects/tap-smile-thumbnail.png",
+    link: "https://tapsandsmiles.com",
+    github: "https://github.com/Polinss3/Tap-Smile",
+    tags: [TAGS.ASTRO, TAGS.TAILWIND, TAGS.JAVASCRIPT, TAGS.CSS, TAGS.HTML, TAGS.GITHUB],
+  },
+  {
+    title: "PropieXpert Real Estate Platform",
+    description: `A comprehensive real estate management platform with frontend and web applications. This project includes a complete solution for property management, featuring user authentication, property listings, search functionality, and administrative tools. Built with modern web technologies and following best practices for scalability and maintainability.`,
+    image: "/projects/propiexpert-thumbnail.png",
+    link: "https://propiexpert.com",
+    github: "https://github.com/Polinss3/PropieXpert-frontend",
+    tags: [TAGS.JAVASCRIPT, TAGS.CSS, TAGS.HTML, TAGS.GITHUB, TAGS.PYTHON, TAGS.FASTAPI, TAGS.DOCKER, TAGS.ASTRO],
   },
   {
     title: "Multifunctional API Project with FastAPI and Docker",
@@ -99,15 +106,24 @@ const PROJECTS = [
     image: "/projects/fastAPI-thumbnail.png",
     link: "",
     github: "https://github.com/Polinss3/fastAPI-project",
-    tags: [TAGS.PYTHON, TAGS.FASTAPI, TAGS.DOCKER],
+    tags: [TAGS.PYTHON, TAGS.FASTAPI, TAGS.DOCKER, TAGS.GITHUB],
   },
   {
     title: "Python Games Collection",
-    description: `This project contains implementations of classic games in Python, using Pygame for an interactive and fun experience. Each game is contained within its own folder, complete with the main game code, unit tests, and detailed instructions for playing. Whether you’re looking to enjoy these classic games or learn from their code, this collection has something for everyone!`,
+    description: `This project contains implementations of classic games in Python, using Pygame for an interactive and fun experience. Each game is contained within its own folder, complete with the main game code, unit tests, and detailed instructions for playing. Whether you're looking to enjoy these classic games or learn from their code, this collection has something for everyone!`,
     image: "/projects/Python-logo.png",
     link: "",
     github: "https://github.com/Polinss3/python-games",
     tags: [TAGS.PYTHON, TAGS.GITHUB],
+  },
+  {
+    title: "Next.js Components and Blog",
+    description:
+      "A collection of reusable components and a blog built with Next.js, Tailwind CSS. Tested using Jest and React Testing Library.",
+    image: "/projects/web-nextJS-thumbnail.png",
+    link: "https://web-next-js-nu.vercel.app/",
+    github: "https://github.com/Polinss3/web-next.js",
+    tags: [TAGS.NEXTJS, TAGS.HTML, TAGS.TAILWIND, TAGS.JAVASCRIPT, TAGS.CSS],
   },
 ];
 ---

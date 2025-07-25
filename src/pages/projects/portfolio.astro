@@ -1,0 +1,64 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ProjectHero from "../../components/ui/ProjectHero.astro";
+import ProjectGallery from "../../components/ui/ProjectGallery.astro";
+import ProjectFeatures from "../../components/ui/ProjectFeatures.astro";
+---
+
+<Layout title="Portfolio Project - Pablo Brasero">
+  <main>
+    <ProjectHero
+      title="Personal Portfolio"
+      subtitle="A showcase of my work and skills"
+      description="A modern, responsive portfolio website built with Astro and Tailwind CSS. This project showcases my skills, experience, and projects in a clean and professional manner."
+      githubUrl="https://github.com/Polinss3/portfolio"
+      liveUrl="https://pablobrasero.com"
+      tags={["Astro", "Tailwind CSS", "TypeScript", "Responsive Design"]}
+    />
+
+    <ProjectGallery
+      images={[
+        "/projects/portfolio/screenshot-1.png",
+        "/projects/portfolio/screenshot-2.png",
+        "/projects/portfolio/screenshot-3.png",
+      ]}
+    />
+
+    <ProjectFeatures
+      features={[
+        {
+          title: "Modern Design",
+          description: "Clean and professional design with a focus on user experience and accessibility.",
+          icon: "🎨",
+        },
+        {
+          title: "Responsive Layout",
+          description: "Fully responsive design that works perfectly on all devices, from mobile to desktop.",
+          icon: "📱",
+        },
+        {
+          title: "Dark Mode",
+          description: "Built-in dark mode support with smooth transitions and persistent user preference.",
+          icon: "🌙",
+        },
+        {
+          title: "Performance Optimized",
+          description: "Optimized for performance with minimal JavaScript and efficient asset loading.",
+          icon: "⚡",
+        },
+        {
+          title: "SEO Friendly",
+          description: "Built with SEO best practices in mind, including proper meta tags and semantic HTML.",
+          icon: "🔍",
+        },
+        {
+          title: "TypeScript Support",
+          description: "Full TypeScript support for better type safety and developer experience.",
+          icon: "📝",
+        },
+      ]}
+      githubUrl="https://github.com/Polinss3/portfolio"
+      liveUrl="https://pablobrasero.com"
+    />
+  </main>
+</Layout> 

@@ -1,0 +1,89 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ProjectHero from "../../components/ui/ProjectHero.astro";
+import ProjectGallery from "../../components/ui/ProjectGallery.astro";
+import ProjectFeatures from "../../components/ui/ProjectFeatures.astro";
+---
+
+<Layout title="Taps & Smiles - Digital Gifts Platform - Pablo Brasero">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="space-y-24">
+      <ProjectHero
+        title="Taps & Smiles - Digital Gifts Platform"
+        subtitle="Modern digital gifts platform"
+        description="A modern and elegant platform developed with Astro for creating and sending personalized digital gifts. Features include Stripe payment integration, Cloudinary image management, MongoDB database, and Resend email services. The platform offers a clean, professional design with optimized performance and responsive layout."
+        githubUrl="https://github.com/Polinss3/Tap-Smile"
+        liveUrl="https://tapsandsmiles.com"
+        tags={["Astro", "Tailwind CSS", "TypeScript", "Stripe", "MongoDB"]}
+      />
+
+      <div class="py-12">
+        <h2 class="text-3xl font-bold text-center mb-12 text-gray-100">
+          Project Screenshots
+        </h2>
+        <ProjectGallery
+          images={[
+            "/projects/tap-smile/screenshot-1.png",
+            "/projects/tap-smile/screenshot-2.png",
+            "/projects/tap-smile/screenshot-3.png",
+          ]}
+        />
+      </div>
+
+      <div class="py-12">
+        <h2 class="text-3xl font-bold text-center mb-12 text-gray-100">
+          Key Features
+        </h2>
+        <ProjectFeatures
+          features={[
+            {
+              title: "Digital Gift Creation",
+              description:
+                "Complete platform for creating and customizing personalized digital gifts with intuitive design tools.",
+              icon: "🎁",
+            },
+            {
+              title: "Payment Integration",
+              description:
+                "Seamless Stripe payment processing for secure transactions and order management.",
+              icon: "💳",
+            },
+            {
+              title: "Image Management",
+              description:
+                "Cloudinary integration for efficient image upload, storage, and optimization.",
+              icon: "🖼️",
+            },
+            {
+              title: "Email Services",
+              description:
+                "Resend integration for automated email notifications and gift delivery.",
+              icon: "📧",
+            },
+            {
+              title: "Admin Dashboard",
+              description:
+                "Comprehensive admin panel with metrics, order management, and content control.",
+              icon: "⚙️",
+            },
+            {
+              title: "Blog System",
+              description:
+                "Integrated blog with SEO-optimized content about gifts and special occasions.",
+              icon: "📝",
+            },
+          ]}
+          githubUrl="https://github.com/Polinss3/Tap-Smile"
+          liveUrl="https://tapsandsmiles.com"
+        />
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  main {
+    min-height: calc(100vh - 64px);
+  }
+</style>
+
