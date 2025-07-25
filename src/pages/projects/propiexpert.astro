@@ -1,0 +1,77 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ProjectHero from "../../components/ui/ProjectHero.astro";
+import ProjectGallery from "../../components/ui/ProjectGallery.astro";
+import ProjectFeatures from "../../components/ui/ProjectFeatures.astro";
+---
+
+<Layout title="PropieXpert Real Estate Platform - Pablo Brasero">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="space-y-24">
+      <ProjectHero
+        title="PropieXpert Real Estate Platform"
+        subtitle="Comprehensive property management solution"
+        description="A comprehensive real estate management platform with frontend and web applications. This project includes a complete solution for property management, featuring user authentication, property listings, search functionality, and administrative tools. Built with modern web technologies and following best practices for scalability and maintainability."
+        githubUrl="https://github.com/Polinss3/PropieXpert-frontend"
+        tags={["JavaScript", "Web Development", "Real Estate", "Full-Stack", "User Management"]}
+      />
+
+      <div class="py-12">
+        <h2 class="text-3xl font-bold text-center mb-12 text-gray-100">Project Screenshots</h2>
+        <ProjectGallery
+          images={[
+            "/projects/propiexpert/screenshot-1.png",
+            "/projects/propiexpert/screenshot-2.png",
+            "/projects/propiexpert/screenshot-3.png",
+            "/projects/propiexpert/screenshot-4.png",
+          ]}
+        />
+      </div>
+
+      <div class="py-12">
+        <h2 class="text-3xl font-bold text-center mb-12 text-gray-100">Key Features</h2>
+        <ProjectFeatures
+          features={[
+            {
+              title: "Property Management",
+              description: "Complete solution for managing real estate properties with detailed listings, search, and filtering capabilities.",
+              icon: "🏠",
+            },
+            {
+              title: "User Authentication",
+              description: "Secure user authentication system with role-based access control for different user types.",
+              icon: "🔐",
+            },
+            {
+              title: "Search & Filter",
+              description: "Advanced search and filtering system to help users find properties that match their criteria.",
+              icon: "🔍",
+            },
+            {
+              title: "Admin Dashboard",
+              description: "Comprehensive administrative tools for managing properties, users, and platform content.",
+              icon: "⚙️",
+            },
+            {
+              title: "Responsive Design",
+              description: "Fully responsive design that works seamlessly across desktop, tablet, and mobile devices.",
+              icon: "📱",
+            },
+            {
+              title: "Modern Architecture",
+              description: "Built with modern web technologies following best practices for scalability and maintainability.",
+              icon: "🏗️",
+            },
+          ]}
+          githubUrl="https://github.com/Polinss3/PropieXpert-frontend"
+        />
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  main {
+    min-height: calc(100vh - 64px);
+  }
+</style> 
