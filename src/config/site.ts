@@ -3,7 +3,7 @@ export const SITE = {
   description: "Mi portfolio personal",
   lang: "es",
   author: "Tu Nombre",
-  url: "https://tusitio.com",
+  url: "https://pablobrasero.com",
   githubUrl: "https://github.com/tuusuario",
   linkedinUrl: "https://linkedin.com/in/tuusuario",
 };
