@@ -160,7 +160,8 @@ const ogImage = p.art.kind === "image" ? p.art.src : undefined;
     align-items: center; justify-content: center; min-height: 380px; padding: 40px 28px;
     background: radial-gradient(ellipse 80% 70% at 50% 25%, #fffdf9, var(--wash));
   }
-  .detail-art :global(.detail-frame.shape-tall) { height: min(60vh, 500px); }
+  .detail-art :global(.detail-frame.shape-tall),
+  .detail-art :global(.detail-frame.shape-phone) { height: min(64vh, 560px); }
   .detail-art :global(.detail-frame.shape-wide) { width: 100%; max-width: 560px; }
   .detail-art :global(.detail-frame.shape-square) { width: 100%; max-width: 380px; }
 

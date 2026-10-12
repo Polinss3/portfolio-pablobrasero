@@ -62,7 +62,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
                   <span class="lamp" aria-hidden="true" />
                   <span class="light" aria-hidden="true" />
                   <button type="button" class="artwork" data-open={p.slug} aria-label={`Acercarse a ${p.title}`}>
-                    <Framed project={p} />
+                    <Framed project={p} eager />
                   </button>
                   <figcaption class="cartela">
                     <span class="cartela-no">Nº {pad(indexOf(p.slug) + 1)}</span>
@@ -192,6 +192,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
     --floor-h: clamp(96px, 19vh, 190px);
     --hud-h: 60px;
     --art-tall: min(46vh, 470px);
+    --art-phone: min(52vh, 540px);
     --art-wide: min(33vh, 330px);
     --art-square: min(38vh, 390px);
     position: relative;
@@ -304,6 +305,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
   }
   .artwork:hover, .exhibit.is-focus .artwork { --s: 1.015; }
   .artwork :global(.frame) { width: auto; }
+  .artwork :global(.shape-phone) { height: var(--art-phone); }
   .artwork :global(.shape-tall) { height: var(--art-tall); }
   .artwork :global(.shape-wide) { height: var(--art-wide); }
   .artwork :global(.shape-square) { height: var(--art-square); }
@@ -412,7 +414,8 @@ const pad = (n: number) => String(n).padStart(2, "0");
     display: flex; align-items: center; justify-content: center; padding: 48px 32px;
     background: radial-gradient(ellipse 70% 60% at 50% 30%, #fffdf9, var(--wash));
   }
-  .viewer-art :global(.viewer-frame.shape-tall) { height: min(56vh, 520px); }
+  .viewer-art :global(.viewer-frame.shape-tall),
+  .viewer-art :global(.viewer-frame.shape-phone) { height: min(60vh, 560px); }
   .viewer-art :global(.viewer-frame.shape-wide) { width: min(100%, 560px); }
   .viewer-art :global(.viewer-frame.shape-square) { width: min(100%, 400px); }
   .viewer-info { padding: 32px 30px 88px; }
@@ -437,6 +440,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
     .museum {
       --floor-h: clamp(80px, 14vh, 120px);
       --art-tall: min(40vh, 330px);
+      --art-phone: min(44vh, 380px);
       --art-wide: min(24vh, 190px);
       --art-square: min(30vh, 260px);
     }
@@ -448,7 +452,8 @@ const pad = (n: number) => String(n).padStart(2, "0");
     .hud-count { margin-right: 2px; }
     .bench { display: none; }
     .viewer-art { padding: 32px 20px; }
-    .viewer-art :global(.viewer-frame.shape-tall) { height: min(42vh, 420px); }
+    .viewer-art :global(.viewer-frame.shape-tall),
+    .viewer-art :global(.viewer-frame.shape-phone) { height: min(46vh, 440px); }
     .viewer-nav { padding-top: 14px; background: linear-gradient(rgba(255, 253, 249, 0), #fffdf9 40%); }
   }
 

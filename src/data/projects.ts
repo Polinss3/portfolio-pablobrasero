@@ -5,7 +5,7 @@ import type { Tint } from "./profile";
 export type Frame = "gilt" | "oak" | "black" | "white" | "walnut";
 
 export type Art =
-  | { kind: "image"; src: string; shape: "tall" | "wide" | "square"; position?: string }
+  | { kind: "image"; src: string; shape: "phone" | "tall" | "wide" | "square"; position?: string }
   | { kind: "gen"; piece: "bento" | "neural" | "signal" | "ledger" | "still" | "chat" | "pixels"; shape: "tall" | "wide" | "square" };
 
 export type Status = { label: string; tone: "live" | "prod" | "private" | "dev" | "archive" };
@@ -47,8 +47,8 @@ export const ROOMS = [
   {
     id: 3,
     numeral: "III",
-    title: "Web, comercio y clientes",
-    text: "Productos con pagos, NFC y paneles de gestión, y webs para negocios reales.",
+    title: "Web y comercio",
+    text: "Productos con pagos, NFC, paneles de gestión y trazabilidad.",
   },
   {
     id: 4,
@@ -68,7 +68,7 @@ export const PROJECTS: Project[] = [
     room: 1,
     tint: "clay",
     frame: "gilt",
-    art: { kind: "image", src: "/gallery/miko/cover.webp", shape: "tall" },
+    art: { kind: "image", src: "/gallery/miko/cover.webp", shape: "phone" },
     status: { label: "En el App Store · v1.6", tone: "live" },
     technique: "React Native, Supabase y arte 3D sobre iPhone y iPad",
     summary:
@@ -93,7 +93,7 @@ export const PROJECTS: Project[] = [
       { label: "App Store", url: "https://apps.apple.com/app/id6785652879" },
       { label: "mikostudy.com", url: "https://mikostudy.com" },
     ],
-    shots: ["/gallery/miko/s2.webp", "/gallery/miko/s3.webp", "/gallery/miko/s4.webp"],
+    shots: ["/gallery/miko/s2.webp", "/gallery/miko/s3.webp", "/gallery/miko/s4.webp", "/gallery/miko/s5.webp", "/gallery/miko/s6.webp", "/gallery/miko/s7.webp"],
   },
   {
     slug: "101-juegos",
@@ -103,7 +103,7 @@ export const PROJECTS: Project[] = [
     room: 1,
     tint: "slate",
     frame: "black",
-    art: { kind: "image", src: "/gallery/101-games/cover.webp", shape: "tall" },
+    art: { kind: "image", src: "/gallery/101-games/cover.webp", shape: "phone" },
     status: { label: "En el App Store · v1.3.1", tone: "live" },
     technique: "TypeScript estricto y 1.760 tests sobre lienzo offline",
     summary:
@@ -128,32 +128,34 @@ export const PROJECTS: Project[] = [
       { label: "App Store", url: "https://apps.apple.com/app/id6791493133" },
       { label: "101games.pablobrasero.com", url: "https://101games.pablobrasero.com" },
     ],
-    shots: ["/gallery/101-games/s2.webp", "/gallery/101-games/s3.webp", "/gallery/101-games/s4.webp"],
+    shots: ["/gallery/101-games/s2.webp", "/gallery/101-games/s3.webp", "/gallery/101-games/s4.webp", "/gallery/101-games/s5.webp", "/gallery/101-games/s6.webp", "/gallery/101-games/s7.webp"],
   },
   {
     slug: "cultura-general",
     title: "Cultura General",
-    kicker: "Trivia diaria, ligas y multijugador",
+    kicker: "Aprende algo nuevo cada día",
     year: "2026",
     room: 1,
     tint: "plum",
     frame: "walnut",
-    art: { kind: "image", src: "/gallery/cultura-general/cover.webp", shape: "wide" },
+    art: { kind: "image", src: "/gallery/cultura-general/cover.webp", shape: "phone" },
     status: { label: "En el App Store · v2.3", tone: "live" },
-    technique: "Expo, Supabase y 1.589 preguntas sobre fondo nocturno",
+    technique: "Expo, Supabase y 4.000 preguntas en 13 temas",
     summary:
-      "App de preguntas con seis modos de juego, progresión con niveles y monedas, ligas semanales y multijugador local. Fuera de España se llama CG Trivia.",
+      "App de cultura general con una Aventura de 400 niveles, pregunta del día, ligas semanales, retos y multijugador local. Fuera de España se llama CG Trivia.",
     story: [
-      "Pregunta del día con cuatro rankings, Contrarreloj de 30 segundos, Modo Ascenso con vidas, checkpoints y un bote que se arriesga o se asegura, retos de banderas de 196 países y de años históricos, y cinco modos para jugar con amigos en un solo móvil.",
+      "La versión 2.3 gira en torno a la Aventura: 20 capítulos y 400 niveles con un guardián al final de cada uno. Alrededor, la pregunta del día compartida por todo el mundo, retos de banderas de 196 países y de años históricos, y cinco modos para jugar con amigos en un solo móvil.",
+      "Cultura General PRO desbloquea la Aventura completa, 2.000 preguntas más, Examen, Repaso inteligente y estadísticas, y quita los anuncios, con pago mensual, anual o único.",
       "La progresión usa la misma fórmula en el cliente y en SQL para que nunca discrepen, y las pantallas con datos de servidor conviven con un modo invitado que permite jugar sin cuenta.",
     ],
     stats: [
-      { value: "1.589", label: "preguntas" },
-      { value: "13", label: "categorías" },
-      { value: "6", label: "modos de juego" },
+      { value: "4.000", label: "preguntas" },
+      { value: "400", label: "niveles de Aventura" },
+      { value: "13", label: "temas" },
     ],
     highlights: [
       "Ligas semanales, misiones diarias y rachas.",
+      "Examen de 40 preguntas con nota y repaso de lo que fallas.",
       "Multijugador local de 2 a 10 jugadores, también por equipos.",
       "Tema claro, oscuro o del sistema; español e inglés.",
       "Campañas propias de vídeo e imagen para Meta y App Store.",
@@ -163,7 +165,7 @@ export const PROJECTS: Project[] = [
       { label: "App Store", url: "https://apps.apple.com/app/id6766927114" },
       { label: "cg-trivia.pablobrasero.com", url: "https://cg-trivia.pablobrasero.com" },
     ],
-    shots: ["/gallery/cultura-general/s2.webp", "/gallery/cultura-general/s3.webp", "/gallery/cultura-general/s4.webp"],
+    shots: ["/gallery/cultura-general/s2.webp", "/gallery/cultura-general/s3.webp", "/gallery/cultura-general/s4.webp", "/gallery/cultura-general/s5.webp", "/gallery/cultura-general/s6.webp", "/gallery/cultura-general/s7.webp"],
   },
   {
     slug: "peakly",
@@ -173,7 +175,7 @@ export const PROJECTS: Project[] = [
     room: 1,
     tint: "umber",
     frame: "oak",
-    art: { kind: "image", src: "/gallery/peakly/cover.webp", shape: "tall" },
+    art: { kind: "image", src: "/gallery/peakly/cover.webp", shape: "phone" },
     status: { label: "En el App Store", tone: "live" },
     technique: "Agentes de IA, Supabase y Stripe sobre oscuro cálido",
     summary:
@@ -411,26 +413,6 @@ export const PROJECTS: Project[] = [
       "Universal links entre web e iOS.",
     ],
     stack: ["Python", "FastAPI", "MongoDB", "Next.js", "SwiftUI", "NFC"],
-    links: [],
-  },
-  {
-    slug: "viena-la-baguette",
-    title: "Viena La Baguette",
-    kicker: "Panadería artesanal de masa madre",
-    year: "2026",
-    room: 3,
-    tint: "umber",
-    frame: "walnut",
-    art: { kind: "image", src: "/gallery/viena/cover.webp", shape: "square" },
-    status: { label: "Proyecto web", tone: "dev" },
-    technique: "Next.js y masa madre",
-    summary:
-      "Web para una panadería artesanal: catálogo de panes con carrusel arrastrable, blog y páginas legales, cuidada como un escaparate.",
-    story: [
-      "Una web rápida y cálida en Next.js con un carrusel de panes que se arrastra y retoma solo su desplazamiento, blog propio y SEO preparado.",
-    ],
-    highlights: ["Carrusel arrastrable con auto-scroll reanudable.", "Blog y SEO con robots y metadatos.", "Páginas legales completas."],
-    stack: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
     links: [],
   },
 
