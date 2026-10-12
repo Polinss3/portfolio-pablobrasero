@@ -19,7 +19,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
         <h1>La galería</h1>
       </div>
       <div class="page-head-right">
-        <span class="chip"><span class="chip-dot"></span>{ordered.length} obras · {rooms.length} salas</span>
+        <span class="chip gallery-chip"><span class="chip-dot"></span>{ordered.length} obras · {rooms.length} salas</span>
         <button type="button" class="round-btn" data-lights-toggle aria-pressed="false" aria-label="Apagar las luces de la sala">
           <Icon name="moon" class="icon-moon" /><Icon name="sun" class="icon-sun" />
         </button>
@@ -30,10 +30,11 @@ const pad = (n: number) => String(n).padStart(2, "0");
 
   <section class="museum" id="museum" data-lights="on" aria-label="Recorrido por la galería">
     <div class="museum-stage">
+      <div class="wall-rail" aria-hidden="true"></div>
+      <div class="wall-dado" aria-hidden="true"></div>
       <div class="museum-floor" aria-hidden="true"></div>
 
       <div class="museum-track" id="museum-track">
-        <div class="wall-dado" aria-hidden="true"></div>
 
         <div class="wall-text wall-entrance">
           <p class="eyebrow">Obra reunida · 2023 — 2026</p>
@@ -42,10 +43,13 @@ const pad = (n: number) => String(n).padStart(2, "0");
             Apps, plataformas y experimentos colgados como cuadros. Cada obra tiene su cartela: acércate para ver cómo está hecha.
           </p>
           <ul class="wall-hints">
-            <li><Icon name="walk" size={16} />Desplázate para recorrer la sala</li>
-            <li><Icon name="keyboard" size={16} />Usa ← → para ir de obra en obra</li>
-            <li><Icon name="frame" size={16} />Pulsa un cuadro para acercarte</li>
+            <li class="only-hover"><Icon name="walk" size={16} />Desplázate hacia abajo para recorrer la sala</li>
+            <li class="only-hover"><Icon name="keyboard" size={16} />Usa ← → para ir de obra en obra</li>
+            <li class="only-hover"><Icon name="frame" size={16} />Pulsa un cuadro para acercarte</li>
+            <li class="only-touch"><Icon name="walk" size={16} />Desliza hacia los lados para recorrer la sala</li>
+            <li class="only-touch"><Icon name="frame" size={16} />Toca un cuadro para verlo de cerca</li>
           </ul>
+          <button type="button" class="btn btn-primary mt-6" data-step="1">Empezar el recorrido<Icon name="arrow-right" /></button>
         </div>
 
         {
@@ -63,12 +67,13 @@ const pad = (n: number) => String(n).padStart(2, "0");
                   <span class="light" aria-hidden="true" />
                   <button type="button" class="artwork" data-open={p.slug} aria-label={`Acercarse a ${p.title}`}>
                     <Framed project={p} eager />
+                    <span class="zoom-hint" aria-hidden="true"><Icon name="plus" size={16} /></span>
                   </button>
                   <figcaption class="cartela">
                     <span class="cartela-no">Nº {pad(indexOf(p.slug) + 1)}</span>
                     <strong>{p.title}</strong>
                     <em>{p.kicker}</em>
-                    <span class="cartela-meta">Pablo Brasero, {p.year}</span>
+                    <span class="cartela-meta cartela-author">Pablo Brasero, {p.year}</span>
                     <span class="cartela-meta">{p.technique}</span>
                     <span class="pill" style={`background:${STATUS_TONE[p.status.tone].bg};color:${STATUS_TONE[p.status.tone].fg}`}>
                       {p.status.label}
@@ -168,6 +173,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
       ))
     }
     <div class="viewer-nav">
+      <span class="viewer-count" id="viewer-count"></span>
       <button type="button" class="round-btn" data-viewer-step="-1" aria-label="Obra anterior"><Icon name="arrow-left" /></button>
       <button type="button" class="round-btn" data-viewer-step="1" aria-label="Obra siguiente"><Icon name="arrow-right" /></button>
     </div>
@@ -189,12 +195,12 @@ const pad = (n: number) => String(n).padStart(2, "0");
     --text: #2b2620;
     --text-dim: #6b6052;
     --glow: rgba(255, 250, 238, 0.95);
-    --floor-h: clamp(96px, 19vh, 190px);
+    --floor-h: clamp(96px, 19cqh, 190px);
     --hud-h: 60px;
-    --art-tall: min(46vh, 470px);
-    --art-phone: min(52vh, 540px);
-    --art-wide: min(33vh, 330px);
-    --art-square: min(38vh, 390px);
+    --art-phone: min(54cqh, 540px);
+    --art-tall: min(46cqh, 470px);
+    --art-wide: min(33cqh, 330px);
+    --art-square: min(38cqh, 390px);
     position: relative;
     color: var(--text);
     transition: color 0.6s;
@@ -202,16 +208,29 @@ const pad = (n: number) => String(n).padStart(2, "0");
 
   .museum-stage {
     position: relative;
-    height: calc(100vh - 0px);
+    height: 100vh;
     height: 100svh;
     overflow: hidden;
+    container-type: size;
     background:
       radial-gradient(ellipse 120% 70% at 50% -10%, rgba(255, 252, 245, 0.45), transparent 60%),
       linear-gradient(var(--wall), var(--wall-2));
     transition: background 0.6s;
   }
-  .museum.is-enhanced .museum-stage { position: sticky; top: 0; }
+  .museum.is-enhanced .museum-stage { position: sticky; top: 0; touch-action: pan-y; }
 
+  .wall-rail {
+    position: absolute; left: 0; right: 0; top: 0; height: 10px;
+    background: linear-gradient(#3a332d, #2b2620);
+    box-shadow: 0 3px 8px rgba(43, 38, 32, 0.25);
+  }
+  .wall-dado {
+    position: absolute; left: 0; right: 0; bottom: var(--floor-h); height: 9%;
+    background: var(--dado);
+    border-top: 3px solid var(--rail);
+    box-shadow: inset 0 6px 0 -3px rgba(255, 255, 255, 0.5);
+    transition: background 0.6s;
+  }
   .museum-floor {
     position: absolute; left: 0; right: 0; bottom: 0; height: var(--floor-h);
     background:
@@ -230,21 +249,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
     width: max-content; padding: 0 8vw 0 0;
     will-change: transform;
   }
-  .museum:not(.is-enhanced) .museum-stage { overflow-x: auto; }
-
-  /* Zócalo y moldura: se mueven con las obras */
-  .wall-dado {
-    position: absolute; left: 0; right: 0; bottom: var(--floor-h); height: 9%;
-    background: var(--dado);
-    border-top: 3px solid var(--rail);
-    box-shadow: inset 0 6px 0 -3px rgba(255, 255, 255, 0.5);
-    transition: background 0.6s;
-  }
-  .museum-track::before {
-    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 10px;
-    background: linear-gradient(#3a332d, #2b2620);
-    box-shadow: 0 3px 8px rgba(43, 38, 32, 0.25);
-  }
+  .museum:not(.is-enhanced):not(.is-swipe) .museum-stage { overflow-x: auto; }
 
   /* ---------- Textos de pared ---------- */
 
@@ -266,14 +271,13 @@ const pad = (n: number) => String(n).padStart(2, "0");
     color: #a4502f; opacity: 0.12; pointer-events: none;
   }
   .wall-room { width: min(360px, 72vw); }
-  .wall-room .eyebrow { color: #a4502f; }
   .wall-hints { margin-top: 26px; display: grid; gap: 8px; font-size: 13px; color: var(--text-dim); }
   .wall-hints li { display: flex; align-items: center; gap: 10px; }
-  .wall-hints li :global(svg) { color: #a4502f; }
+  .wall-hints li :global(svg) { flex-shrink: 0; color: #a4502f; }
   .wall-exit { width: min(400px, 76vw); }
-
   .museum .eyebrow { color: var(--text-dim); }
   .museum .wall-room .eyebrow { color: #a4502f; }
+  .museum:not(.is-enhanced):not(.is-swipe) [data-step] { display: none; }
 
   /* ---------- Obras ---------- */
 
@@ -300,20 +304,27 @@ const pad = (n: number) => String(n).padStart(2, "0");
 
   .artwork {
     position: relative; z-index: 1; display: block; padding: 0; border: 0; background: none; cursor: zoom-in;
+    -webkit-tap-highlight-color: transparent;
     transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(var(--s, 1));
     transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
   }
   .artwork:hover, .exhibit.is-focus .artwork { --s: 1.015; }
-  .artwork :global(.frame) { width: auto; }
+  .artwork:active { --s: 0.985; }
   .artwork :global(.shape-phone) { height: var(--art-phone); }
   .artwork :global(.shape-tall) { height: var(--art-tall); }
   .artwork :global(.shape-wide) { height: var(--art-wide); }
   .artwork :global(.shape-square) { height: var(--art-square); }
   .artwork::after {
-    /* sombra proyectada sobre la pared */
     content: ""; position: absolute; left: 8%; right: 8%; bottom: -22px; height: 26px; z-index: -1;
     background: radial-gradient(ellipse at center, rgba(43, 38, 32, 0.25), transparent 70%);
   }
+  .zoom-hint {
+    position: absolute; right: 10px; bottom: 10px; z-index: 2;
+    display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 17px;
+    background: rgba(255, 253, 249, 0.92); color: #2b2620; box-shadow: 0 4px 10px rgba(43, 38, 32, 0.25);
+    opacity: 0; transform: scale(0.8); transition: opacity 0.3s, transform 0.3s; pointer-events: none;
+  }
+  .artwork:hover .zoom-hint, .exhibit.is-focus .zoom-hint { opacity: 1; transform: none; }
 
   .cartela {
     position: relative; z-index: 1; align-self: flex-end; display: flex; flex-direction: column; gap: 3px;
@@ -321,7 +332,6 @@ const pad = (n: number) => String(n).padStart(2, "0");
     background: #fffdf9; border: 1px solid #e6dccb; color: #2b2620;
     box-shadow: 0 6px 14px -8px rgba(43, 38, 32, 0.4);
     font-size: 12px; line-height: 1.4;
-    transition: box-shadow 0.5s;
   }
   .cartela strong { font-family: Fraunces, Georgia, serif; font-size: 17px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.15; }
   .cartela em { color: #4a4238; }
@@ -334,9 +344,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
     margin: 0 -75px calc(var(--floor-h) * 0.35); z-index: 2;
     background: linear-gradient(#3a332d, #2b2620) top / 100% 12px no-repeat;
   }
-  .bench::before, .bench::after {
-    content: ""; position: absolute; top: 12px; width: 10px; height: 28px; background: #2b2620;
-  }
+  .bench::before, .bench::after { content: ""; position: absolute; top: 12px; width: 10px; height: 28px; background: #2b2620; }
   .bench::before { left: 16px; }
   .bench::after { right: 16px; }
   .bench:last-of-type { display: none; }
@@ -370,9 +378,8 @@ const pad = (n: number) => String(n).padStart(2, "0");
     position: absolute; left: 50%; bottom: 14px; z-index: 5; transform: translateX(-50%);
     display: flex; align-items: center; gap: 16px; height: var(--hud-h); width: max-content; max-width: calc(100% - 24px);
     padding: 0 8px 0 18px; border-radius: 18px; background: rgba(255, 253, 249, 0.94); border: 1px solid #e3d8c6;
-    box-shadow: 0 10px 28px -12px rgba(43, 38, 32, 0.45);
+    color: #2b2620; box-shadow: 0 10px 28px -12px rgba(43, 38, 32, 0.45);
   }
-  .museum-hud { color: #2b2620; }
   .hud-room { min-width: 0; max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 600; }
   .hud-map { display: flex; align-items: center; gap: 6px; }
   .hud-map-room { display: flex; align-items: center; gap: 3px; height: 30px; padding: 0 8px; border-radius: 10px; background: #f6f1e8; border: 1px solid #e6dccb; }
@@ -388,18 +395,19 @@ const pad = (n: number) => String(n).padStart(2, "0");
   .hud-count { margin-right: 6px; font-size: 12px; color: #6b6052; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .hud-count b { color: #2b2620; font-weight: 700; }
   .hud-btn {
-    display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px;
-    border: 0; background: transparent; color: #4a4238; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px;
+    border: 0; background: transparent; color: #4a4238; cursor: pointer; -webkit-tap-highlight-color: transparent;
   }
-  .hud-btn:hover { background: #ece5d8; color: #2b2620; }
-  .museum:not(.is-enhanced) .museum-hud { display: none; }
+  .hud-btn:hover, .hud-btn:active { background: #ece5d8; color: #2b2620; }
+  .hud-btn:disabled { opacity: 0.35; cursor: default; background: transparent; }
+  .museum:not(.is-enhanced):not(.is-swipe) .museum-hud { display: none; }
 
   /* ---------- Visor ---------- */
 
   .viewer {
     width: min(1080px, calc(100vw - 32px)); max-height: calc(100vh - 32px); max-height: calc(100dvh - 32px);
     padding: 0; border: 1px solid #e6dccb; border-radius: 22px; background: #fffdf9; color: #2b2620;
-    box-shadow: 0 40px 80px -30px rgba(43, 38, 32, 0.6); overflow: auto;
+    box-shadow: 0 40px 80px -30px rgba(43, 38, 32, 0.6); overflow: auto; overscroll-behavior: contain;
   }
   .viewer::backdrop { background: rgba(31, 27, 23, 0.62); backdrop-filter: blur(3px); }
   .viewer[open] { animation: viewer-in 0.35s cubic-bezier(0.2, 0.7, 0.2, 1); }
@@ -407,6 +415,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
     from { opacity: 0; transform: translateY(14px) scale(0.98); }
     to { opacity: 1; transform: none; }
   }
+  :global(html:has(dialog[open])) { overflow: hidden; }
   .viewer-close { position: absolute; top: 14px; right: 14px; z-index: 3; }
   .viewer-panel { display: grid; grid-template-columns: minmax(0, 1fr); }
   .viewer-panel[hidden] { display: none; }
@@ -420,8 +429,12 @@ const pad = (n: number) => String(n).padStart(2, "0");
   .viewer-art :global(.viewer-frame.shape-square) { width: min(100%, 400px); }
   .viewer-info { padding: 32px 30px 88px; }
   .viewer-stats { display: flex; gap: 28px; margin-top: 20px; padding-top: 16px; border-top: 1px solid #e6dccb; }
-  .viewer-nav { position: sticky; bottom: 0; display: flex; justify-content: flex-end; gap: 8px; padding: 0 20px 20px; margin-top: -64px; pointer-events: none; }
+  .viewer-nav {
+    position: sticky; bottom: 0; display: flex; align-items: center; justify-content: flex-end; gap: 8px;
+    padding: 0 20px 20px; margin-top: -64px; pointer-events: none;
+  }
   .viewer-nav > * { pointer-events: auto; }
+  .viewer-count { margin-right: auto; font-size: 13px; font-weight: 600; color: #6b6052; font-variant-numeric: tabular-nums; visibility: hidden; }
 
   @media (min-width: 900px) {
     .viewer-panel { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); min-height: 560px; }
@@ -429,32 +442,90 @@ const pad = (n: number) => String(n).padStart(2, "0");
     .viewer-info { padding: 44px 40px 90px; }
   }
 
-  /* ---------- Tamaños ---------- */
-
   @media (max-width: 1100px) {
     .gallery-head { padding: 16px 16px 14px; }
     .hud-room { display: none; }
   }
 
+  /* ---------- Móvil: se recorre deslizando, una obra por pantalla ---------- */
+
   @media (max-width: 760px) {
+    .gallery-head { padding: 14px 16px 12px; }
+    .gallery-head .page-head { flex-direction: row; align-items: center; flex-wrap: nowrap; }
+    .gallery-head .page-head h1 { font-size: 24px; }
+    .gallery-head :global(.gallery-chip) { display: none; }
+    .gallery-head .eyebrow { display: none; }
+    .gallery-head .page-head-right { flex-wrap: nowrap; }
+
     .museum {
-      --floor-h: clamp(80px, 14vh, 120px);
-      --art-tall: min(40vh, 330px);
-      --art-phone: min(44vh, 380px);
-      --art-wide: min(24vh, 190px);
-      --art-square: min(30vh, 260px);
+      --floor-h: clamp(70px, 13cqh, 110px);
+      --art-phone: min(47cqh, 400px);
+      --art-tall: min(42cqh, 360px);
+      --art-wide: min(26cqh, 46vw);
+      --art-square: min(32cqh, 66vw);
     }
-    .exhibit { flex-direction: column; align-items: center; justify-content: center; gap: 22px; }
-    .cartela { align-self: center; width: min(260px, 70vw); }
-    .museum-hud { padding: 0 6px 0 14px; gap: 8px; bottom: 10px; width: calc(100% - 24px); justify-content: space-between; }
-    .hud-map { display: none; }
-    .hud-room { display: block; max-width: none; flex: 1 1 auto; font-size: 12px; }
-    .hud-count { margin-right: 2px; }
+    .museum-stage {
+      height: calc(100svh - var(--tabbar-h) - var(--head-h, 72px));
+      min-height: 480px;
+    }
+    .museum.is-swipe .museum-track {
+      width: 100%; padding: 0; overflow-x: auto; overflow-y: hidden;
+      scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none;
+      -webkit-overflow-scrolling: touch; will-change: auto;
+    }
+    .museum.is-swipe .museum-track::-webkit-scrollbar { display: none; }
+    .wall-text, .wall-entrance, .wall-room, .wall-exit, .exhibit {
+      flex: 0 0 86vw; width: 86vw; margin: 0 7vw; scroll-snap-align: center; scroll-snap-stop: always;
+    }
+    .wall-text { padding-bottom: var(--floor-h); }
+    .wall-title { font-size: 46px; }
+    .wall-title-sm { font-size: 32px; }
+    .wall-body { font-size: 15px; }
+    .wall-numeral { font-size: 120px; }
+    .wall-hints { margin-top: 18px; }
+    .exhibit { flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding-bottom: calc(var(--floor-h) + 12px); }
+    .cartela {
+      align-self: center; width: min(300px, 80vw); padding: 10px 12px; gap: 2px;
+      display: grid; grid-template-columns: 1fr auto; column-gap: 10px; align-items: baseline;
+    }
+    .cartela > * { grid-column: 1 / -1; }
+    .cartela-no { grid-column: 1; }
+    .cartela .pill { grid-column: 2; grid-row: 1; margin: 0; justify-self: end; }
+    .cartela-author { display: none; }
+    .cartela strong { font-size: 18px; }
+    .light { width: 120%; }
     .bench { display: none; }
-    .viewer-art { padding: 32px 20px; }
+
+    .museum-hud {
+      left: 12px; right: 12px; bottom: 10px; transform: none; width: auto; max-width: none;
+      height: 54px; padding: 0 6px 0 14px; gap: 8px; justify-content: space-between;
+    }
+    .hud-map { display: none; }
+    .hud-room { display: block; max-width: none; flex: 1 1 auto; font-size: 12.5px; }
+    .hud-count { margin-right: 2px; }
+
+    .viewer {
+      width: 100%; max-width: 100%; height: 100dvh; max-height: 100dvh; margin: 0;
+      border: 0; border-radius: 0;
+    }
+    .viewer[open] { animation-name: viewer-up; }
+    @keyframes viewer-up {
+      from { opacity: 0.6; transform: translateY(40px); }
+      to { opacity: 1; transform: none; }
+    }
+    .viewer-close { position: fixed; top: calc(12px + env(safe-area-inset-top)); right: 12px; box-shadow: 0 4px 12px rgba(43, 38, 32, 0.18); }
+    .viewer-art { padding: calc(56px + env(safe-area-inset-top)) 20px 28px; }
     .viewer-art :global(.viewer-frame.shape-tall),
-    .viewer-art :global(.viewer-frame.shape-phone) { height: min(46vh, 440px); }
-    .viewer-nav { padding-top: 14px; background: linear-gradient(rgba(255, 253, 249, 0), #fffdf9 40%); }
+    .viewer-art :global(.viewer-frame.shape-phone) { height: min(48vh, 440px); }
+    .viewer-info { padding: 24px 20px calc(100px + env(safe-area-inset-bottom)); }
+    .viewer-info h2 { font-size: 30px; }
+    .viewer-stats { gap: 18px; }
+    .viewer-nav {
+      position: fixed; left: 0; right: 0; bottom: 0; margin: 0;
+      padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(255, 253, 249, 0.96); border-top: 1px solid #e6dccb; pointer-events: auto;
+    }
+    .viewer-count { visibility: visible; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -467,116 +538,165 @@ const pad = (n: number) => String(n).padStart(2, "0");
   const stage = museum.querySelector(".museum-stage") as HTMLElement;
   const track = document.getElementById("museum-track") as HTMLElement;
   const floor = museum.querySelector(".museum-floor") as HTMLElement;
+  const head = document.querySelector(".gallery-head") as HTMLElement;
   const exhibits = Array.from(museum.querySelectorAll<HTMLElement>(".exhibit"));
   const dots = Array.from(museum.querySelectorAll<HTMLButtonElement>(".hud-dot"));
   const roomStarts = Array.from(museum.querySelectorAll<HTMLElement>("[data-room-start]"));
+  const exit = museum.querySelector(".wall-exit") as HTMLElement;
   const hudRoom = document.getElementById("hud-room")!;
   const hudCount = document.getElementById("hud-count")!;
   const viewer = document.getElementById("viewer") as HTMLDialogElement;
+  const viewerCount = document.getElementById("viewer-count")!;
   const panels = Array.from(viewer.querySelectorAll<HTMLElement>("[data-panel]"));
-  const roomNames = new Map(roomStarts.map((el) => [el.dataset.roomStart!, `Sala ${el.querySelector(".eyebrow")!.textContent!.replace("Sala ", "")} · ${el.querySelector(".wall-title")!.textContent}`]));
+  const roomName = (el: HTMLElement) => `${el.querySelector(".eyebrow")!.textContent} · ${el.querySelector(".wall-title")!.textContent}`;
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const mobile = window.matchMedia("(max-width: 760px)");
+  const pad = (n: number) => String(n).padStart(2, "0");
 
+  // En escritorio el scroll vertical desplaza la pared; en móvil se desliza en horizontal.
+  let swipe = mobile.matches;
   let maxX = 0;
   let x = 0;
-  let focus = -1;
+  let focus = -2;
   let ticking = false;
 
-  // --- Recorrido: el scroll vertical desplaza la pared en horizontal ---
+  const artCenter = (el: HTMLElement) => {
+    const art = el.querySelector(".artwork") as HTMLElement;
+    return el.offsetLeft + art.offsetLeft + art.offsetWidth / 2;
+  };
 
   function layout() {
-    museum.classList.add("is-enhanced");
-    // Cada foco se cuelga sobre el centro de su cuadro (la cartela queda al lado).
+    swipe = mobile.matches;
+    museum.classList.toggle("is-swipe", swipe);
+    museum.classList.toggle("is-enhanced", !swipe);
+    museum.style.setProperty("--head-h", `${head.offsetHeight}px`);
     exhibits.forEach((el) => {
       const art = el.querySelector(".artwork") as HTMLElement;
       el.style.setProperty("--lamp-x", `${art.offsetLeft + art.offsetWidth / 2}px`);
     });
-    const viewW = stage.clientWidth;
-    maxX = Math.max(0, track.scrollWidth - viewW);
-    museum.style.height = `${maxX + window.innerHeight}px`;
+    if (swipe) {
+      museum.style.height = "";
+      track.style.transform = "";
+      maxX = Math.max(0, track.scrollWidth - track.clientWidth);
+    } else {
+      maxX = Math.max(0, track.scrollWidth - stage.clientWidth);
+      museum.style.height = `${maxX + stage.offsetHeight}px`;
+    }
     update();
   }
 
   function progress() {
-    const top = museum.getBoundingClientRect().top;
-    const span = museum.offsetHeight - window.innerHeight;
-    return span > 0 ? Math.min(1, Math.max(0, -top / span)) : 0;
+    const span = museum.offsetHeight - stage.offsetHeight;
+    return span > 0 ? Math.min(1, Math.max(0, -museum.getBoundingClientRect().top / span)) : 0;
   }
 
   function update() {
     ticking = false;
-    x = progress() * maxX;
-    track.style.transform = `translate3d(${-x}px, 0, 0)`;
+    x = swipe ? track.scrollLeft : progress() * maxX;
+    if (!swipe) track.style.transform = `translate3d(${-x}px, 0, 0)`;
     floor.style.setProperty("--floor-x", `${-x}px`);
     // La obra más cercana al centro de la vista recibe la luz.
     const center = x + stage.clientWidth / 2;
     let best = -1;
     let bestDist = Infinity;
     exhibits.forEach((el, i) => {
-      const art = el.querySelector(".artwork") as HTMLElement;
-      const c = el.offsetLeft + art.offsetLeft + art.offsetWidth / 2;
-      const d = Math.abs(c - center);
+      const d = Math.abs(artCenter(el) - center);
       if (d < bestDist) {
         bestDist = d;
         best = i;
       }
     });
-    if (bestDist > stage.clientWidth * 0.42) best = -1;
-    if (best !== focus) setFocus(best);
+    if (bestDist > stage.clientWidth * (swipe ? 0.3 : 0.42)) best = -1;
+    if (best !== focus) setFocus(best, center);
+    else if (best < 0) setRoomLabel(center);
   }
 
-  function setFocus(i: number) {
+  function setRoomLabel(center: number) {
+    if (center < (roomStarts[0]?.offsetLeft ?? 0)) hudRoom.textContent = "Vestíbulo";
+    else if (center > exit.offsetLeft - 40) hudRoom.textContent = "Salida";
+    else {
+      const room = roomStarts.filter((r) => r.offsetLeft - 40 <= center).pop();
+      if (room) hudRoom.textContent = roomName(room);
+    }
+  }
+
+  function setFocus(i: number, center: number) {
     focus = i;
     exhibits.forEach((el, j) => el.classList.toggle("is-focus", j === i));
     dots.forEach((d, j) => d.classList.toggle("is-active", j === i));
     if (i < 0) {
       hudCount.textContent = "—";
-      const before = x < (roomStarts[0]?.offsetLeft ?? 0);
-      hudRoom.textContent = before ? "Vestíbulo" : x >= maxX - 4 ? "Salida" : hudRoom.textContent;
+      setRoomLabel(center);
       return;
     }
-    hudCount.textContent = String(i + 1).padStart(2, "0");
-    hudRoom.textContent = roomNames.get(exhibits[i].dataset.room!) ?? "";
+    hudCount.textContent = pad(i + 1);
+    const room = roomStarts.find((r) => r.dataset.roomStart === exhibits[i].dataset.room);
+    if (room) hudRoom.textContent = roomName(room);
   }
 
-  function scrollToX(targetX: number) {
+  function scrollToX(targetX: number, instant = false) {
     const clamped = Math.min(maxX, Math.max(0, targetX));
+    const behavior: ScrollBehavior = reduced || instant ? "auto" : "smooth";
+    if (swipe) {
+      track.scrollTo({ left: clamped, behavior });
+      return;
+    }
     const top = museum.getBoundingClientRect().top + window.scrollY;
-    const span = museum.offsetHeight - window.innerHeight;
-    window.scrollTo({ top: top + (maxX ? (clamped / maxX) * span : 0), behavior: reduced ? "auto" : "smooth" });
+    const span = museum.offsetHeight - stage.offsetHeight;
+    window.scrollTo({ top: top + (maxX ? (clamped / maxX) * span : 0), behavior });
   }
 
-  function goTo(i: number) {
+  function goTo(i: number, instant = false) {
     const el = exhibits[Math.min(exhibits.length - 1, Math.max(0, i))];
-    const art = el.querySelector(".artwork") as HTMLElement;
-    scrollToX(el.offsetLeft + art.offsetLeft + art.offsetWidth / 2 - stage.clientWidth / 2);
+    scrollToX(artCenter(el) - stage.clientWidth / 2, instant);
   }
 
   function step(dir: number) {
     if (focus < 0) {
-      // Desde el vestíbulo o la salida, ir a la obra más próxima en esa dirección.
+      // Desde el vestíbulo, un texto de sala o la salida: la obra más próxima en esa dirección.
       const center = x + stage.clientWidth / 2;
-      const next = dir > 0 ? exhibits.findIndex((el) => el.offsetLeft > center) : exhibits.map((el) => el.offsetLeft < center).lastIndexOf(true);
+      const next = dir > 0 ? exhibits.findIndex((el) => artCenter(el) > center + 1) : exhibits.map((el) => artCenter(el) < center - 1).lastIndexOf(true);
       if (next >= 0) goTo(next);
+      else if (dir > 0) scrollToX(maxX);
       return;
     }
+    if (focus + dir >= exhibits.length) return scrollToX(maxX);
+    if (focus + dir < 0) return scrollToX(0);
     goTo(focus + dir);
   }
 
-  window.addEventListener("scroll", () => {
+  const onScroll = () => {
     if (!ticking) {
       ticking = true;
       requestAnimationFrame(update);
     }
-  }, { passive: true });
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  track.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", layout);
+  mobile.addEventListener("change", layout);
   document.fonts?.ready.then(layout);
 
-  // Trackpad o rueda horizontal: también avanza.
+  // Tablet: deslizar a los lados también salta de obra en obra.
+  let swipeX = 0;
+  let swipeY = 0;
+  stage.addEventListener("touchstart", (e) => {
+    swipeX = e.touches[0].clientX;
+    swipeY = e.touches[0].clientY;
+  }, { passive: true });
+  stage.addEventListener("touchend", (e) => {
+    if (swipe) return;
+    const dx = e.changedTouches[0].clientX - swipeX;
+    const dy = e.changedTouches[0].clientY - swipeY;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.3) step(dx < 0 ? 1 : -1);
+  }, { passive: true });
+
+  // Trackpad o rueda horizontal en escritorio: también avanza.
   stage.addEventListener("wheel", (e) => {
-    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && maxX > 0) {
+    if (swipe || maxX <= 0) return;
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
       e.preventDefault();
-      window.scrollBy(0, e.deltaX * ((museum.offsetHeight - window.innerHeight) / maxX));
+      window.scrollBy(0, e.deltaX * ((museum.offsetHeight - stage.offsetHeight) / maxX));
     }
   }, { passive: false });
 
@@ -610,10 +730,8 @@ const pad = (n: number) => String(n).padStart(2, "0");
       art.addEventListener("pointermove", (e) => {
         if (e.pointerType !== "mouse") return;
         const r = art.getBoundingClientRect();
-        const px = (e.clientX - r.left) / r.width - 0.5;
-        const py = (e.clientY - r.top) / r.height - 0.5;
-        art.style.setProperty("--ry", `${px * 7}deg`);
-        art.style.setProperty("--rx", `${-py * 7}deg`);
+        art.style.setProperty("--ry", `${((e.clientX - r.left) / r.width - 0.5) * 7}deg`);
+        art.style.setProperty("--rx", `${-((e.clientY - r.top) / r.height - 0.5) * 7}deg`);
       });
       art.addEventListener("pointerleave", () => {
         art.style.removeProperty("--rx");
@@ -630,13 +748,13 @@ const pad = (n: number) => String(n).padStart(2, "0");
     current = (i + panels.length) % panels.length;
     panels.forEach((p, j) => (p.hidden = j !== current));
     viewer.scrollTop = 0;
+    viewerCount.textContent = `${pad(current + 1)} / ${pad(panels.length)}`;
     history.replaceState(null, "", `#${panels[current].dataset.panel}`);
   }
 
   museum.querySelectorAll<HTMLButtonElement>("[data-open]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const i = panels.findIndex((p) => p.dataset.panel === btn.dataset.open);
-      show(i);
+      show(panels.findIndex((p) => p.dataset.panel === btn.dataset.open));
       viewer.showModal();
     });
   });
@@ -647,7 +765,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
   });
   viewer.addEventListener("close", () => {
     history.replaceState(null, "", location.pathname);
-    goTo(current);
+    goTo(current, true);
   });
   viewer.querySelectorAll<HTMLButtonElement>("[data-viewer-step]").forEach((b) => b.addEventListener("click", () => show(current + Number(b.dataset.viewerStep))));
   viewer.addEventListener("keydown", (e) => {
@@ -655,14 +773,37 @@ const pad = (n: number) => String(n).padStart(2, "0");
     if (e.key === "ArrowLeft") show(current - 1);
   });
 
+  // Deslizar a los lados dentro del visor cambia de obra.
+  let touchX = 0;
+  let touchY = 0;
+  viewer.addEventListener("touchstart", (e) => {
+    touchX = e.touches[0].clientX;
+    touchY = e.touches[0].clientY;
+  }, { passive: true });
+  viewer.addEventListener("touchend", (e) => {
+    const dx = e.changedTouches[0].clientX - touchX;
+    const dy = e.changedTouches[0].clientY - touchY;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) show(current + (dx < 0 ? 1 : -1));
+  }, { passive: true });
+
   layout();
+
+  // Enlace directo a una obra, también si cambia el hash sin recargar.
+  window.addEventListener("hashchange", () => {
+    const i = panels.findIndex((p) => p.dataset.panel === decodeURIComponent(location.hash.slice(1)));
+    if (i >= 0 && !viewer.open) {
+      goTo(i, true);
+      show(i);
+      viewer.showModal();
+    }
+  });
 
   // Enlace directo a una obra: /galeria#miko
   const hash = decodeURIComponent(location.hash.slice(1));
   const fromHash = panels.findIndex((p) => p.dataset.panel === hash);
   if (fromHash >= 0) {
     requestAnimationFrame(() => {
-      goTo(fromHash);
+      goTo(fromHash, true);
       show(fromHash);
       viewer.showModal();
     });

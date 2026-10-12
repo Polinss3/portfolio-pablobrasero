@@ -41,7 +41,7 @@ const STATS = [
         <img src={PROFILE.photo} alt="Retrato de Pablo Brasero" class="hero-photo" width="148" height="148" />
         <div>
           <p class="eyebrow" style="color: var(--clay)">Hola, soy Pablo</p>
-          <p class="mt-3 font-display text-[30px] font-medium leading-[1.12] tracking-tight xl:text-[36px]">
+          <p class="mt-3 font-display text-[26px] font-medium leading-[1.14] tracking-tight sm:text-[30px] xl:text-[36px]">
             {PROFILE.tagline}
           </p>
         </div>
@@ -238,7 +238,7 @@ const STATS = [
     </div>
   </a>
 
-  <section class="cardgrid mt-[14px]">
+  <section class="cardgrid carousel-mobile mt-[14px]">
     {published.map((p) => <ProjectCard project={p} />)}
   </section>
 
@@ -290,6 +290,9 @@ const STATS = [
     .mini-f4 { display: block; }
   }
   @media (max-width: 640px) {
+    .hero-photo { width: 96px; height: 96px; border-radius: 22px; }
+    .hero .btn-primary { flex: 1 1 100%; }
+    .hero .btn-ghost { flex: 1 1 0; }
     .mini-f3 { display: none; }
     .mini-wide { width: 96px; height: 62px; }
   }
