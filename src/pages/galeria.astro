@@ -1,0 +1,811 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Icon from "@/components/Icon.astro";
+import Framed from "@/components/Framed.astro";
+import { PROFILE } from "@/data/profile";
+import { PROJECTS, ROOMS, STATUS_TONE, TINT } from "@/data/projects";
+
+const rooms = ROOMS.map((room) => ({ ...room, projects: PROJECTS.filter((p) => p.room === room.id) }));
+const ordered = rooms.flatMap((r) => r.projects);
+const indexOf = (slug: string) => ordered.findIndex((p) => p.slug === slug);
+const pad = (n: number) => String(n).padStart(2, "0");
+---
+
+<Layout title="Galería" flush description="Una galería interactiva con los proyectos de Pablo Brasero colgados como cuadros: apps en el App Store, plataformas propias y agentes de IA.">
+  <div class="gallery-head">
+    <header class="page-head" style="margin-bottom: 0">
+      <div>
+        <p class="eyebrow">Showroom · Exposición permanente</p>
+        <h1>La galería</h1>
+      </div>
+      <div class="page-head-right">
+        <span class="chip gallery-chip"><span class="chip-dot"></span>{ordered.length} obras · {rooms.length} salas</span>
+        <button type="button" class="round-btn" data-lights-toggle aria-pressed="false" aria-label="Apagar las luces de la sala">
+          <Icon name="moon" class="icon-moon" /><Icon name="sun" class="icon-sun" />
+        </button>
+        <a href="/proyectos" class="round-btn" aria-label="Ver como lista"><Icon name="grid" /></a>
+      </div>
+    </header>
+  </div>
+
+  <section class="museum" id="museum" data-lights="on" aria-label="Recorrido por la galería">
+    <div class="museum-stage">
+      <div class="wall-rail" aria-hidden="true"></div>
+      <div class="wall-dado" aria-hidden="true"></div>
+      <div class="museum-floor" aria-hidden="true"></div>
+
+      <div class="museum-track" id="museum-track">
+
+        <div class="wall-text wall-entrance">
+          <p class="eyebrow">Obra reunida · 2023 — 2026</p>
+          <p class="wall-title">{PROFILE.short}</p>
+          <p class="wall-body">
+            Apps, plataformas y experimentos colgados como cuadros. Cada obra tiene su cartela: acércate para ver cómo está hecha.
+          </p>
+          <ul class="wall-hints">
+            <li class="only-hover"><Icon name="walk" size={16} />Desplázate hacia abajo para recorrer la sala</li>
+            <li class="only-hover"><Icon name="keyboard" size={16} />Usa ← → para ir de obra en obra</li>
+            <li class="only-hover"><Icon name="frame" size={16} />Pulsa un cuadro para acercarte</li>
+            <li class="only-touch"><Icon name="walk" size={16} />Desliza hacia los lados para recorrer la sala</li>
+            <li class="only-touch"><Icon name="frame" size={16} />Toca un cuadro para verlo de cerca</li>
+          </ul>
+          <button type="button" class="btn btn-primary mt-6" data-step="1">Empezar el recorrido<Icon name="arrow-right" /></button>
+        </div>
+
+        {
+          rooms.map((room) => (
+            <>
+              <div class="wall-text wall-room" data-room-start={room.id}>
+                <p class="wall-numeral">{room.numeral}</p>
+                <p class="eyebrow">Sala {room.numeral}</p>
+                <p class="wall-title wall-title-sm">{room.title}</p>
+                <p class="wall-body">{room.text}</p>
+              </div>
+              {room.projects.map((p) => (
+                <figure class="exhibit" data-index={indexOf(p.slug)} data-room={room.id} data-title={p.title}>
+                  <span class="lamp" aria-hidden="true" />
+                  <span class="light" aria-hidden="true" />
+                  <button type="button" class="artwork" data-open={p.slug} aria-label={`Acercarse a ${p.title}`}>
+                    <Framed project={p} eager />
+                    <span class="zoom-hint" aria-hidden="true"><Icon name="plus" size={16} /></span>
+                  </button>
+                  <figcaption class="cartela">
+                    <span class="cartela-no">Nº {pad(indexOf(p.slug) + 1)}</span>
+                    <strong>{p.title}</strong>
+                    <em>{p.kicker}</em>
+                    <span class="cartela-meta cartela-author">Pablo Brasero, {p.year}</span>
+                    <span class="cartela-meta">{p.technique}</span>
+                    <span class="pill" style={`background:${STATUS_TONE[p.status.tone].bg};color:${STATUS_TONE[p.status.tone].fg}`}>
+                      {p.status.label}
+                    </span>
+                  </figcaption>
+                </figure>
+              ))}
+              <span class="bench" aria-hidden="true" />
+            </>
+          ))
+        }
+
+        <div class="wall-text wall-exit">
+          <p class="eyebrow">Fin del recorrido</p>
+          <p class="wall-title wall-title-sm">Gracias por la visita</p>
+          <p class="wall-body">Si algo te ha llamado la atención, hablemos.</p>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <a href={PROFILE.linkedin} class="btn btn-primary" target="_blank" rel="noopener"><Icon name="linkedin" />LinkedIn</a>
+            <a href="/" class="btn btn-ghost"><Icon name="user" />Currículum</a>
+            <a href={PROFILE.cv} class="btn btn-ghost" download><Icon name="download" />PDF</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="museum-hud">
+        <p class="hud-room" aria-live="polite"><span id="hud-room">Vestíbulo</span></p>
+        <nav class="hud-map" aria-label="Plano de la galería">
+          {
+            rooms.map((room) => (
+              <span class="hud-map-room" title={`Sala ${room.numeral}: ${room.title}`}>
+                <span class="hud-map-label">{room.numeral}</span>
+                {room.projects.map((p) => (
+                  <button type="button" class="hud-dot" data-goto={indexOf(p.slug)} aria-label={`Ir a ${p.title}`} />
+                ))}
+              </span>
+            ))
+          }
+        </nav>
+        <div class="hud-nav">
+          <span class="hud-count"><b id="hud-count">—</b> / {pad(ordered.length)}</span>
+          <button type="button" class="hud-btn" data-step="-1" aria-label="Obra anterior"><Icon name="chevron-left" size={18} /></button>
+          <button type="button" class="hud-btn" data-step="1" aria-label="Obra siguiente"><Icon name="chevron-right" size={18} /></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Visor: al acercarse a una obra -->
+  <dialog class="viewer" id="viewer" aria-label="Detalle de la obra">
+    <button type="button" class="viewer-close round-btn" data-close aria-label="Cerrar"><Icon name="x" /></button>
+    {
+      ordered.map((p, i) => (
+        <article class="viewer-panel" data-panel={p.slug} hidden>
+          <div class="viewer-art" style={`--wash:${TINT[p.tint].bg}`}>
+            <Framed project={p} class="viewer-frame" />
+          </div>
+          <div class="viewer-info">
+            <p class="eyebrow">
+              Nº {pad(i + 1)} · Sala {ROOMS.find((r) => r.id === p.room)!.numeral} · {p.year}
+            </p>
+            <h2 class="mt-2 font-display text-[34px] font-medium leading-none tracking-tight">{p.title}</h2>
+            <p class="mt-2 text-[15px] text-dim">{p.kicker}</p>
+            <span class="pill mt-3" style={`background:${STATUS_TONE[p.status.tone].bg};color:${STATUS_TONE[p.status.tone].fg}`}>
+              {p.status.label}
+            </span>
+            <p class="mt-4 text-[15px] leading-relaxed text-soft">{p.summary}</p>
+            {p.stats && (
+              <div class="viewer-stats">
+                {p.stats.map((s) => (
+                  <div>
+                    <p class="big-num text-[28px]" style={`color:${TINT[p.tint].fg}`}>{s.value}</p>
+                    <p class="mt-1 text-xs text-dim">{s.label}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+            <p class="tile-label mt-5">Técnica</p>
+            <div class="mt-2 flex flex-wrap gap-1.5">
+              {p.stack.map((s) => (
+                <span class="tag">{s}</span>
+              ))}
+            </div>
+            <div class="mt-6 flex flex-wrap gap-2">
+              <a href={`/proyectos/${p.slug}`} class="btn btn-primary">
+                Ficha completa
+                <Icon name="arrow-right" />
+              </a>
+              {p.links.slice(0, 2).map((l) => (
+                <a href={l.url} class="btn btn-ghost" target="_blank" rel="noopener">
+                  {l.label}
+                  <Icon name="arrow-up-right" />
+                </a>
+              ))}
+            </div>
+          </div>
+        </article>
+      ))
+    }
+    <div class="viewer-nav">
+      <span class="viewer-count" id="viewer-count"></span>
+      <button type="button" class="round-btn" data-viewer-step="-1" aria-label="Obra anterior"><Icon name="arrow-left" /></button>
+      <button type="button" class="round-btn" data-viewer-step="1" aria-label="Obra siguiente"><Icon name="arrow-right" /></button>
+    </div>
+  </dialog>
+</Layout>
+
+<style>
+  .gallery-head { padding: 26px 28px 18px; }
+
+  /* ---------- Sala ---------- */
+
+  .museum {
+    --wall: #eadfce;
+    --wall-2: #dfd1bc;
+    --dado: #d8c8b0;
+    --rail: #cdb89b;
+    --floor-a: #b38963;
+    --floor-b: #8d6646;
+    --text: #2b2620;
+    --text-dim: #6b6052;
+    --glow: rgba(255, 250, 238, 0.95);
+    --floor-h: clamp(96px, 19cqh, 190px);
+    --hud-h: 60px;
+    --art-phone: min(54cqh, 540px);
+    --art-tall: min(46cqh, 470px);
+    --art-wide: min(33cqh, 330px);
+    --art-square: min(38cqh, 390px);
+    position: relative;
+    color: var(--text);
+    transition: color 0.6s;
+  }
+
+  .museum-stage {
+    position: relative;
+    height: 100vh;
+    height: 100svh;
+    overflow: hidden;
+    container-type: size;
+    background:
+      radial-gradient(ellipse 120% 70% at 50% -10%, rgba(255, 252, 245, 0.45), transparent 60%),
+      linear-gradient(var(--wall), var(--wall-2));
+    transition: background 0.6s;
+  }
+  .museum.is-enhanced .museum-stage { position: sticky; top: 0; touch-action: pan-y; }
+
+  .wall-rail {
+    position: absolute; left: 0; right: 0; top: 0; height: 10px;
+    background: linear-gradient(#3a332d, #2b2620);
+    box-shadow: 0 3px 8px rgba(43, 38, 32, 0.25);
+  }
+  .wall-dado {
+    position: absolute; left: 0; right: 0; bottom: var(--floor-h); height: 9%;
+    background: var(--dado);
+    border-top: 3px solid var(--rail);
+    box-shadow: inset 0 6px 0 -3px rgba(255, 255, 255, 0.5);
+    transition: background 0.6s;
+  }
+  .museum-floor {
+    position: absolute; left: 0; right: 0; bottom: 0; height: var(--floor-h);
+    background:
+      linear-gradient(rgba(43, 38, 32, 0.28), transparent 18%),
+      repeating-linear-gradient(90deg, transparent 0 157px, rgba(43, 26, 14, 0.18) 157px 159px),
+      repeating-linear-gradient(0deg, transparent 0 22px, rgba(43, 26, 14, 0.07) 22px 23px),
+      linear-gradient(var(--floor-a), var(--floor-b));
+    background-position: var(--floor-x, 0) 0, var(--floor-x, 0) 0, 0 0, 0 0;
+    border-top: 6px solid #f6efe3;
+    box-shadow: 0 -1px 0 #d6c7ae;
+    transition: filter 0.6s;
+  }
+
+  .museum-track {
+    position: relative; display: flex; align-items: stretch; height: 100%;
+    width: max-content; padding: 0 8vw 0 0;
+    will-change: transform;
+  }
+  .museum:not(.is-enhanced):not(.is-swipe) .museum-stage { overflow-x: auto; }
+
+  /* ---------- Textos de pared ---------- */
+
+  .wall-text {
+    position: relative; flex-shrink: 0; align-self: center;
+    width: min(440px, 76vw); margin: 0 clamp(48px, 7vw, 120px);
+    padding-bottom: calc(var(--floor-h) + 2vh);
+  }
+  .wall-entrance { margin-left: clamp(28px, 6vw, 96px); width: min(520px, 78vw); }
+  .wall-title {
+    margin-top: 10px; font-family: Fraunces, Georgia, serif; font-size: clamp(40px, 6vw, 76px);
+    font-weight: 500; line-height: 0.98; letter-spacing: -0.035em;
+  }
+  .wall-title-sm { font-size: clamp(30px, 3.6vw, 46px); line-height: 1.05; }
+  .wall-body { margin-top: 16px; max-width: 400px; font-size: 16px; line-height: 1.6; color: var(--text-dim); }
+  .wall-numeral {
+    position: absolute; left: -0.06em; top: -0.95em; z-index: -1;
+    font-family: Fraunces, Georgia, serif; font-size: clamp(110px, 15vw, 210px); font-weight: 400; line-height: 1;
+    color: #a4502f; opacity: 0.12; pointer-events: none;
+  }
+  .wall-room { width: min(360px, 72vw); }
+  .wall-hints { margin-top: 26px; display: grid; gap: 8px; font-size: 13px; color: var(--text-dim); }
+  .wall-hints li { display: flex; align-items: center; gap: 10px; }
+  .wall-hints li :global(svg) { flex-shrink: 0; color: #a4502f; }
+  .wall-exit { width: min(400px, 76vw); }
+  .museum .eyebrow { color: var(--text-dim); }
+  .museum .wall-room .eyebrow { color: #a4502f; }
+  .museum:not(.is-enhanced):not(.is-swipe) [data-step] { display: none; }
+
+  /* ---------- Obras ---------- */
+
+  .exhibit {
+    position: relative; flex-shrink: 0; display: flex; align-items: center; gap: 20px;
+    margin: 0 clamp(56px, 7vw, 128px); padding-bottom: var(--floor-h);
+  }
+  .lamp {
+    position: absolute; top: 8px; left: var(--lamp-x, 50%); width: 46px; height: 22px; margin-left: -23px;
+    border-radius: 0 0 10px 10px; background: linear-gradient(#4a4238, #2b2620);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  }
+  .lamp::after {
+    content: ""; position: absolute; left: 9px; right: 9px; bottom: -3px; height: 4px; border-radius: 2px;
+    background: #fff4dc; box-shadow: 0 0 12px 4px rgba(255, 236, 196, 0.8);
+  }
+  .light {
+    position: absolute; top: 20px; left: var(--lamp-x, 50%); z-index: 0;
+    width: 140%; max-width: 760px; height: calc(100% - var(--floor-h) + 40px); transform: translateX(-50%);
+    background: radial-gradient(ellipse 48% 78% at 50% 0%, var(--glow), transparent 72%);
+    opacity: 0.55; pointer-events: none; transition: opacity 0.5s;
+  }
+  .exhibit.is-focus .light { opacity: 1; }
+
+  .artwork {
+    position: relative; z-index: 1; display: block; padding: 0; border: 0; background: none; cursor: zoom-in;
+    -webkit-tap-highlight-color: transparent;
+    transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(var(--s, 1));
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .artwork:hover, .exhibit.is-focus .artwork { --s: 1.015; }
+  .artwork:active { --s: 0.985; }
+  .artwork :global(.shape-phone) { height: var(--art-phone); }
+  .artwork :global(.shape-tall) { height: var(--art-tall); }
+  .artwork :global(.shape-wide) { height: var(--art-wide); }
+  .artwork :global(.shape-square) { height: var(--art-square); }
+  .artwork::after {
+    content: ""; position: absolute; left: 8%; right: 8%; bottom: -22px; height: 26px; z-index: -1;
+    background: radial-gradient(ellipse at center, rgba(43, 38, 32, 0.25), transparent 70%);
+  }
+  .zoom-hint {
+    position: absolute; right: 10px; bottom: 10px; z-index: 2;
+    display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 17px;
+    background: rgba(255, 253, 249, 0.92); color: #2b2620; box-shadow: 0 4px 10px rgba(43, 38, 32, 0.25);
+    opacity: 0; transform: scale(0.8); transition: opacity 0.3s, transform 0.3s; pointer-events: none;
+  }
+  .artwork:hover .zoom-hint, .exhibit.is-focus .zoom-hint { opacity: 1; transform: none; }
+
+  .cartela {
+    position: relative; z-index: 1; align-self: flex-end; display: flex; flex-direction: column; gap: 3px;
+    width: 172px; padding: 14px 14px 12px; border-radius: 4px;
+    background: #fffdf9; border: 1px solid #e6dccb; color: #2b2620;
+    box-shadow: 0 6px 14px -8px rgba(43, 38, 32, 0.4);
+    font-size: 12px; line-height: 1.4;
+  }
+  .cartela strong { font-family: Fraunces, Georgia, serif; font-size: 17px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.15; }
+  .cartela em { color: #4a4238; }
+  .cartela-no { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; color: #a4502f; }
+  .cartela-meta { color: #6b6052; }
+  .cartela .pill { align-self: flex-start; margin-top: 6px; }
+
+  .bench {
+    position: relative; flex-shrink: 0; align-self: flex-end; width: 150px; height: 40px;
+    margin: 0 -75px calc(var(--floor-h) * 0.35); z-index: 2;
+    background: linear-gradient(#3a332d, #2b2620) top / 100% 12px no-repeat;
+  }
+  .bench::before, .bench::after { content: ""; position: absolute; top: 12px; width: 10px; height: 28px; background: #2b2620; }
+  .bench::before { left: 16px; }
+  .bench::after { right: 16px; }
+  .bench:last-of-type { display: none; }
+
+  /* ---------- Luces apagadas ---------- */
+
+  .museum[data-lights="off"] {
+    --wall: #2a241f;
+    --wall-2: #1f1b17;
+    --dado: #1b1714;
+    --rail: #3a322b;
+    --text: #f3eee5;
+    --text-dim: #b3a691;
+    --glow: rgba(255, 228, 178, 0.6);
+  }
+  .museum[data-lights="off"] .museum-stage { background: linear-gradient(var(--wall), var(--wall-2)); }
+  .museum[data-lights="off"] .museum-floor { filter: brightness(0.42) saturate(0.85); border-top-color: #3a322b; }
+  .museum[data-lights="off"] .light { opacity: 0.25; }
+  .museum[data-lights="off"] .exhibit.is-focus .light { opacity: 1; }
+  .museum[data-lights="off"] .exhibit:not(.is-focus) .artwork { filter: brightness(0.62); }
+  .museum[data-lights="off"] .artwork { transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.5s; }
+  .museum[data-lights="off"] .wall-numeral { opacity: 0.2; color: #c0623f; }
+  .museum[data-lights="off"] .bench { filter: brightness(0.6); }
+  [data-lights-toggle] :global(.icon-sun) { display: none; }
+  [data-lights-toggle][aria-pressed="true"] :global(.icon-sun) { display: block; }
+  [data-lights-toggle][aria-pressed="true"] :global(.icon-moon) { display: none; }
+
+  /* ---------- HUD ---------- */
+
+  .museum-hud {
+    position: absolute; left: 50%; bottom: 14px; z-index: 5; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 16px; height: var(--hud-h); width: max-content; max-width: calc(100% - 24px);
+    padding: 0 8px 0 18px; border-radius: 18px; background: rgba(255, 253, 249, 0.94); border: 1px solid #e3d8c6;
+    color: #2b2620; box-shadow: 0 10px 28px -12px rgba(43, 38, 32, 0.45);
+  }
+  .hud-room { min-width: 0; max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 600; }
+  .hud-map { display: flex; align-items: center; gap: 6px; }
+  .hud-map-room { display: flex; align-items: center; gap: 3px; height: 30px; padding: 0 8px; border-radius: 10px; background: #f6f1e8; border: 1px solid #e6dccb; }
+  .hud-map-label { margin-right: 4px; font-family: Fraunces, Georgia, serif; font-size: 12px; color: #6b6052; }
+  .hud-dot { width: 18px; height: 22px; padding: 0; border: 0; background: none; cursor: pointer; position: relative; }
+  .hud-dot::after {
+    content: ""; position: absolute; left: 50%; top: 50%; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 4px;
+    background: #d6c7ae; transition: transform 0.2s, background-color 0.2s;
+  }
+  .hud-dot:hover::after { background: #6b6052; }
+  .hud-dot.is-active::after { background: #a4502f; transform: scale(1.5); }
+  .hud-nav { display: flex; align-items: center; gap: 4px; }
+  .hud-count { margin-right: 6px; font-size: 12px; color: #6b6052; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .hud-count b { color: #2b2620; font-weight: 700; }
+  .hud-btn {
+    display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px;
+    border: 0; background: transparent; color: #4a4238; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  }
+  .hud-btn:hover, .hud-btn:active { background: #ece5d8; color: #2b2620; }
+  .hud-btn:disabled { opacity: 0.35; cursor: default; background: transparent; }
+  .museum:not(.is-enhanced):not(.is-swipe) .museum-hud { display: none; }
+
+  /* ---------- Visor ---------- */
+
+  .viewer {
+    width: min(1080px, calc(100vw - 32px)); max-height: calc(100vh - 32px); max-height: calc(100dvh - 32px);
+    padding: 0; border: 1px solid #e6dccb; border-radius: 22px; background: #fffdf9; color: #2b2620;
+    box-shadow: 0 40px 80px -30px rgba(43, 38, 32, 0.6); overflow: auto; overscroll-behavior: contain;
+  }
+  .viewer::backdrop { background: rgba(31, 27, 23, 0.62); backdrop-filter: blur(3px); }
+  .viewer[open] { animation: viewer-in 0.35s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  @keyframes viewer-in {
+    from { opacity: 0; transform: translateY(14px) scale(0.98); }
+    to { opacity: 1; transform: none; }
+  }
+  :global(html:has(dialog[open])) { overflow: hidden; }
+  .viewer-close { position: absolute; top: 14px; right: 14px; z-index: 3; }
+  .viewer-panel { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .viewer-panel[hidden] { display: none; }
+  .viewer-art {
+    display: flex; align-items: center; justify-content: center; padding: 48px 32px;
+    background: radial-gradient(ellipse 70% 60% at 50% 30%, #fffdf9, var(--wash));
+  }
+  .viewer-art :global(.viewer-frame.shape-tall),
+  .viewer-art :global(.viewer-frame.shape-phone) { height: min(60vh, 560px); }
+  .viewer-art :global(.viewer-frame.shape-wide) { width: min(100%, 560px); }
+  .viewer-art :global(.viewer-frame.shape-square) { width: min(100%, 400px); }
+  .viewer-info { padding: 32px 30px 88px; }
+  .viewer-stats { display: flex; gap: 28px; margin-top: 20px; padding-top: 16px; border-top: 1px solid #e6dccb; }
+  .viewer-nav {
+    position: sticky; bottom: 0; display: flex; align-items: center; justify-content: flex-end; gap: 8px;
+    padding: 0 20px 20px; margin-top: -64px; pointer-events: none;
+  }
+  .viewer-nav > * { pointer-events: auto; }
+  .viewer-count { margin-right: auto; font-size: 13px; font-weight: 600; color: #6b6052; font-variant-numeric: tabular-nums; visibility: hidden; }
+
+  @media (min-width: 900px) {
+    .viewer-panel { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); min-height: 560px; }
+    .viewer-art { border-radius: 22px 0 0 22px; }
+    .viewer-info { padding: 44px 40px 90px; }
+  }
+
+  @media (max-width: 1100px) {
+    .gallery-head { padding: 16px 16px 14px; }
+    .hud-room { display: none; }
+  }
+
+  /* ---------- Móvil: se recorre deslizando, una obra por pantalla ---------- */
+
+  @media (max-width: 760px) {
+    .gallery-head { padding: 14px 16px 12px; }
+    .gallery-head .page-head { flex-direction: row; align-items: center; flex-wrap: nowrap; }
+    .gallery-head .page-head h1 { font-size: 24px; }
+    .gallery-head :global(.gallery-chip) { display: none; }
+    .gallery-head .eyebrow { display: none; }
+    .gallery-head .page-head-right { flex-wrap: nowrap; }
+
+    .museum {
+      --floor-h: clamp(70px, 13cqh, 110px);
+      --art-phone: min(47cqh, 400px);
+      --art-tall: min(42cqh, 360px);
+      --art-wide: min(26cqh, 46vw);
+      --art-square: min(32cqh, 66vw);
+    }
+    .museum-stage {
+      height: calc(100svh - var(--tabbar-h) - var(--head-h, 72px));
+      min-height: 480px;
+    }
+    .museum.is-swipe .museum-track {
+      width: 100%; padding: 0; overflow-x: auto; overflow-y: hidden;
+      scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none;
+      -webkit-overflow-scrolling: touch; will-change: auto;
+    }
+    .museum.is-swipe .museum-track::-webkit-scrollbar { display: none; }
+    .wall-text, .wall-entrance, .wall-room, .wall-exit, .exhibit {
+      flex: 0 0 86vw; width: 86vw; margin: 0 7vw; scroll-snap-align: center; scroll-snap-stop: always;
+    }
+    .wall-text { padding-bottom: var(--floor-h); }
+    .wall-title { font-size: 46px; }
+    .wall-title-sm { font-size: 32px; }
+    .wall-body { font-size: 15px; }
+    .wall-numeral { font-size: 120px; }
+    .wall-hints { margin-top: 18px; }
+    .exhibit { flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding-bottom: calc(var(--floor-h) + 12px); }
+    .cartela {
+      align-self: center; width: min(300px, 80vw); padding: 10px 12px; gap: 2px;
+      display: grid; grid-template-columns: 1fr auto; column-gap: 10px; align-items: baseline;
+    }
+    .cartela > * { grid-column: 1 / -1; }
+    .cartela-no { grid-column: 1; }
+    .cartela .pill { grid-column: 2; grid-row: 1; margin: 0; justify-self: end; }
+    .cartela-author { display: none; }
+    .cartela strong { font-size: 18px; }
+    .light { width: 120%; }
+    .bench { display: none; }
+
+    .museum-hud {
+      left: 12px; right: 12px; bottom: 10px; transform: none; width: auto; max-width: none;
+      height: 54px; padding: 0 6px 0 14px; gap: 8px; justify-content: space-between;
+    }
+    .hud-map { display: none; }
+    .hud-room { display: block; max-width: none; flex: 1 1 auto; font-size: 12.5px; }
+    .hud-count { margin-right: 2px; }
+
+    .viewer {
+      width: 100%; max-width: 100%; height: 100dvh; max-height: 100dvh; margin: 0;
+      border: 0; border-radius: 0;
+    }
+    .viewer[open] { animation-name: viewer-up; }
+    @keyframes viewer-up {
+      from { opacity: 0.6; transform: translateY(40px); }
+      to { opacity: 1; transform: none; }
+    }
+    .viewer-close { position: fixed; top: calc(12px + env(safe-area-inset-top)); right: 12px; box-shadow: 0 4px 12px rgba(43, 38, 32, 0.18); }
+    .viewer-art { padding: calc(56px + env(safe-area-inset-top)) 20px 28px; }
+    .viewer-art :global(.viewer-frame.shape-tall),
+    .viewer-art :global(.viewer-frame.shape-phone) { height: min(48vh, 440px); }
+    .viewer-info { padding: 24px 20px calc(100px + env(safe-area-inset-bottom)); }
+    .viewer-info h2 { font-size: 30px; }
+    .viewer-stats { gap: 18px; }
+    .viewer-nav {
+      position: fixed; left: 0; right: 0; bottom: 0; margin: 0;
+      padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(255, 253, 249, 0.96); border-top: 1px solid #e6dccb; pointer-events: auto;
+    }
+    .viewer-count { visibility: visible; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .artwork, .light, .viewer[open] { transition: none; animation: none; }
+  }
+</style>
+
+<script>
+  const museum = document.getElementById("museum") as HTMLElement;
+  const stage = museum.querySelector(".museum-stage") as HTMLElement;
+  const track = document.getElementById("museum-track") as HTMLElement;
+  const floor = museum.querySelector(".museum-floor") as HTMLElement;
+  const head = document.querySelector(".gallery-head") as HTMLElement;
+  const exhibits = Array.from(museum.querySelectorAll<HTMLElement>(".exhibit"));
+  const dots = Array.from(museum.querySelectorAll<HTMLButtonElement>(".hud-dot"));
+  const roomStarts = Array.from(museum.querySelectorAll<HTMLElement>("[data-room-start]"));
+  const exit = museum.querySelector(".wall-exit") as HTMLElement;
+  const hudRoom = document.getElementById("hud-room")!;
+  const hudCount = document.getElementById("hud-count")!;
+  const viewer = document.getElementById("viewer") as HTMLDialogElement;
+  const viewerCount = document.getElementById("viewer-count")!;
+  const panels = Array.from(viewer.querySelectorAll<HTMLElement>("[data-panel]"));
+  const roomName = (el: HTMLElement) => `${el.querySelector(".eyebrow")!.textContent} · ${el.querySelector(".wall-title")!.textContent}`;
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const mobile = window.matchMedia("(max-width: 760px)");
+  const pad = (n: number) => String(n).padStart(2, "0");
+
+  // En escritorio el scroll vertical desplaza la pared; en móvil se desliza en horizontal.
+  let swipe = mobile.matches;
+  let maxX = 0;
+  let x = 0;
+  let focus = -2;
+  let ticking = false;
+
+  const artCenter = (el: HTMLElement) => {
+    const art = el.querySelector(".artwork") as HTMLElement;
+    return el.offsetLeft + art.offsetLeft + art.offsetWidth / 2;
+  };
+
+  function layout() {
+    swipe = mobile.matches;
+    museum.classList.toggle("is-swipe", swipe);
+    museum.classList.toggle("is-enhanced", !swipe);
+    museum.style.setProperty("--head-h", `${head.offsetHeight}px`);
+    exhibits.forEach((el) => {
+      const art = el.querySelector(".artwork") as HTMLElement;
+      el.style.setProperty("--lamp-x", `${art.offsetLeft + art.offsetWidth / 2}px`);
+    });
+    if (swipe) {
+      museum.style.height = "";
+      track.style.transform = "";
+      maxX = Math.max(0, track.scrollWidth - track.clientWidth);
+    } else {
+      maxX = Math.max(0, track.scrollWidth - stage.clientWidth);
+      museum.style.height = `${maxX + stage.offsetHeight}px`;
+    }
+    update();
+  }
+
+  function progress() {
+    const span = museum.offsetHeight - stage.offsetHeight;
+    return span > 0 ? Math.min(1, Math.max(0, -museum.getBoundingClientRect().top / span)) : 0;
+  }
+
+  function update() {
+    ticking = false;
+    x = swipe ? track.scrollLeft : progress() * maxX;
+    if (!swipe) track.style.transform = `translate3d(${-x}px, 0, 0)`;
+    floor.style.setProperty("--floor-x", `${-x}px`);
+    // La obra más cercana al centro de la vista recibe la luz.
+    const center = x + stage.clientWidth / 2;
+    let best = -1;
+    let bestDist = Infinity;
+    exhibits.forEach((el, i) => {
+      const d = Math.abs(artCenter(el) - center);
+      if (d < bestDist) {
+        bestDist = d;
+        best = i;
+      }
+    });
+    if (bestDist > stage.clientWidth * (swipe ? 0.3 : 0.42)) best = -1;
+    if (best !== focus) setFocus(best, center);
+    else if (best < 0) setRoomLabel(center);
+  }
+
+  function setRoomLabel(center: number) {
+    if (center < (roomStarts[0]?.offsetLeft ?? 0)) hudRoom.textContent = "Vestíbulo";
+    else if (center > exit.offsetLeft - 40) hudRoom.textContent = "Salida";
+    else {
+      const room = roomStarts.filter((r) => r.offsetLeft - 40 <= center).pop();
+      if (room) hudRoom.textContent = roomName(room);
+    }
+  }
+
+  function setFocus(i: number, center: number) {
+    focus = i;
+    exhibits.forEach((el, j) => el.classList.toggle("is-focus", j === i));
+    dots.forEach((d, j) => d.classList.toggle("is-active", j === i));
+    if (i < 0) {
+      hudCount.textContent = "—";
+      setRoomLabel(center);
+      return;
+    }
+    hudCount.textContent = pad(i + 1);
+    const room = roomStarts.find((r) => r.dataset.roomStart === exhibits[i].dataset.room);
+    if (room) hudRoom.textContent = roomName(room);
+  }
+
+  function scrollToX(targetX: number, instant = false) {
+    const clamped = Math.min(maxX, Math.max(0, targetX));
+    const behavior: ScrollBehavior = reduced || instant ? "auto" : "smooth";
+    if (swipe) {
+      track.scrollTo({ left: clamped, behavior });
+      return;
+    }
+    const top = museum.getBoundingClientRect().top + window.scrollY;
+    const span = museum.offsetHeight - stage.offsetHeight;
+    window.scrollTo({ top: top + (maxX ? (clamped / maxX) * span : 0), behavior });
+  }
+
+  function goTo(i: number, instant = false) {
+    const el = exhibits[Math.min(exhibits.length - 1, Math.max(0, i))];
+    scrollToX(artCenter(el) - stage.clientWidth / 2, instant);
+  }
+
+  function step(dir: number) {
+    if (focus < 0) {
+      // Desde el vestíbulo, un texto de sala o la salida: la obra más próxima en esa dirección.
+      const center = x + stage.clientWidth / 2;
+      const next = dir > 0 ? exhibits.findIndex((el) => artCenter(el) > center + 1) : exhibits.map((el) => artCenter(el) < center - 1).lastIndexOf(true);
+      if (next >= 0) goTo(next);
+      else if (dir > 0) scrollToX(maxX);
+      return;
+    }
+    if (focus + dir >= exhibits.length) return scrollToX(maxX);
+    if (focus + dir < 0) return scrollToX(0);
+    goTo(focus + dir);
+  }
+
+  const onScroll = () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  track.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", layout);
+  mobile.addEventListener("change", layout);
+  document.fonts?.ready.then(layout);
+
+  // Tablet: deslizar a los lados también salta de obra en obra.
+  let swipeX = 0;
+  let swipeY = 0;
+  stage.addEventListener("touchstart", (e) => {
+    swipeX = e.touches[0].clientX;
+    swipeY = e.touches[0].clientY;
+  }, { passive: true });
+  stage.addEventListener("touchend", (e) => {
+    if (swipe) return;
+    const dx = e.changedTouches[0].clientX - swipeX;
+    const dy = e.changedTouches[0].clientY - swipeY;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.3) step(dx < 0 ? 1 : -1);
+  }, { passive: true });
+
+  // Trackpad o rueda horizontal en escritorio: también avanza.
+  stage.addEventListener("wheel", (e) => {
+    if (swipe || maxX <= 0) return;
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+      e.preventDefault();
+      window.scrollBy(0, e.deltaX * ((museum.offsetHeight - stage.offsetHeight) / maxX));
+    }
+  }, { passive: false });
+
+  window.addEventListener("keydown", (e) => {
+    if (viewer.open || e.altKey || e.metaKey || e.ctrlKey) return;
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    const r = museum.getBoundingClientRect();
+    if (r.bottom < window.innerHeight * 0.5 || r.top > window.innerHeight * 0.5) return;
+    e.preventDefault();
+    step(e.key === "ArrowRight" ? 1 : -1);
+  });
+
+  museum.querySelectorAll<HTMLButtonElement>("[data-step]").forEach((b) => b.addEventListener("click", () => step(Number(b.dataset.step))));
+  dots.forEach((d) => d.addEventListener("click", () => goTo(Number(d.dataset.goto))));
+
+  // --- Luces ---
+
+  document.querySelectorAll<HTMLButtonElement>("[data-lights-toggle]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const off = museum.dataset.lights !== "off";
+      museum.dataset.lights = off ? "off" : "on";
+      btn.setAttribute("aria-pressed", String(off));
+      btn.setAttribute("aria-label", off ? "Encender las luces de la sala" : "Apagar las luces de la sala");
+    });
+  });
+
+  // --- Inclinación del cuadro al pasar el ratón ---
+
+  if (!reduced) {
+    museum.querySelectorAll<HTMLElement>(".artwork").forEach((art) => {
+      art.addEventListener("pointermove", (e) => {
+        if (e.pointerType !== "mouse") return;
+        const r = art.getBoundingClientRect();
+        art.style.setProperty("--ry", `${((e.clientX - r.left) / r.width - 0.5) * 7}deg`);
+        art.style.setProperty("--rx", `${-((e.clientY - r.top) / r.height - 0.5) * 7}deg`);
+      });
+      art.addEventListener("pointerleave", () => {
+        art.style.removeProperty("--rx");
+        art.style.removeProperty("--ry");
+      });
+    });
+  }
+
+  // --- Visor ---
+
+  let current = 0;
+
+  function show(i: number) {
+    current = (i + panels.length) % panels.length;
+    panels.forEach((p, j) => (p.hidden = j !== current));
+    viewer.scrollTop = 0;
+    viewerCount.textContent = `${pad(current + 1)} / ${pad(panels.length)}`;
+    history.replaceState(null, "", `#${panels[current].dataset.panel}`);
+  }
+
+  museum.querySelectorAll<HTMLButtonElement>("[data-open]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      show(panels.findIndex((p) => p.dataset.panel === btn.dataset.open));
+      viewer.showModal();
+    });
+  });
+
+  viewer.querySelector("[data-close]")!.addEventListener("click", () => viewer.close());
+  viewer.addEventListener("click", (e) => {
+    if (e.target === viewer) viewer.close();
+  });
+  viewer.addEventListener("close", () => {
+    history.replaceState(null, "", location.pathname);
+    goTo(current, true);
+  });
+  viewer.querySelectorAll<HTMLButtonElement>("[data-viewer-step]").forEach((b) => b.addEventListener("click", () => show(current + Number(b.dataset.viewerStep))));
+  viewer.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") show(current + 1);
+    if (e.key === "ArrowLeft") show(current - 1);
+  });
+
+  // Deslizar a los lados dentro del visor cambia de obra.
+  let touchX = 0;
+  let touchY = 0;
+  viewer.addEventListener("touchstart", (e) => {
+    touchX = e.touches[0].clientX;
+    touchY = e.touches[0].clientY;
+  }, { passive: true });
+  viewer.addEventListener("touchend", (e) => {
+    const dx = e.changedTouches[0].clientX - touchX;
+    const dy = e.changedTouches[0].clientY - touchY;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) show(current + (dx < 0 ? 1 : -1));
+  }, { passive: true });
+
+  layout();
+
+  // Enlace directo a una obra, también si cambia el hash sin recargar.
+  window.addEventListener("hashchange", () => {
+    const i = panels.findIndex((p) => p.dataset.panel === decodeURIComponent(location.hash.slice(1)));
+    if (i >= 0 && !viewer.open) {
+      goTo(i, true);
+      show(i);
+      viewer.showModal();
+    }
+  });
+
+  // Enlace directo a una obra: /galeria#miko
+  const hash = decodeURIComponent(location.hash.slice(1));
+  const fromHash = panels.findIndex((p) => p.dataset.panel === hash);
+  if (fromHash >= 0) {
+    requestAnimationFrame(() => {
+      goTo(fromHash, true);
+      show(fromHash);
+      viewer.showModal();
+    });
+  }
+</script>

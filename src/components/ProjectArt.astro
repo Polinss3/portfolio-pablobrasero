@@ -1,0 +1,203 @@
+---
+// El "lienzo" de cada cuadro: una captura real o, para los proyectos sin
+// imagen pública, una pieza generativa en SVG con la paleta del sistema.
+import type { Project } from "@/data/projects";
+
+interface Props {
+  project: Project;
+  eager?: boolean;
+}
+
+const { project, eager = false } = Astro.props;
+const { art, title } = project;
+---
+
+{
+  art.kind === "image" ? (
+    <img
+      src={art.src}
+      alt={`${title}: captura del proyecto`}
+      loading={eager ? "eager" : "lazy"}
+      decoding="async"
+      class="art-img"
+      style={art.position ? `object-position: ${art.position}` : undefined}
+    />
+  ) : art.piece === "bento" ? (
+    <svg class="art-svg" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" role="img" aria-label={`${title}: composición abstracta`}>
+      <rect width="400" height="400" fill="#f3eee5" />
+      <rect x="22" y="22" width="206" height="150" rx="16" fill="#fffdf9" stroke="#e6dccb" />
+      <text x="40" y="58" font-family="Figtree, sans-serif" font-size="11" font-weight="600" fill="#6b6052" letter-spacing="1.5">LUZ · AHORA</text>
+      <text x="38" y="118" font-family="Fraunces, serif" font-size="52" fill="#2b2620">0,08</text>
+      <path d="M40 150 L64 140 L88 146 L112 128 L136 134 L160 112 L184 120 L208 102" fill="none" stroke="#a4502f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <rect x="240" y="22" width="138" height="150" rx="16" fill="#4e5c2e" />
+      <circle cx="309" cy="97" r="44" fill="none" stroke="#7d8b55" stroke-width="12" />
+      <path d="M309 53 A44 44 0 1 1 268 112" fill="none" stroke="#f3eee5" stroke-width="12" stroke-linecap="round" />
+      <rect x="22" y="186" width="120" height="192" rx="16" fill="#a4502f" />
+      <rect x="40" y="300" width="14" height="58" rx="3" fill="#f4e3d9" />
+      <rect x="62" y="270" width="14" height="88" rx="3" fill="#f4e3d9" />
+      <rect x="84" y="320" width="14" height="38" rx="3" fill="#f4e3d9" />
+      <rect x="106" y="250" width="14" height="108" rx="3" fill="#fffdf9" />
+      <rect x="156" y="186" width="222" height="88" rx="16" fill="#f5ead2" stroke="#e8d5ac" />
+      <rect x="176" y="226" width="182" height="8" rx="4" fill="#e8d5ac" />
+      <rect x="176" y="226" width="120" height="8" rx="4" fill="#c99a45" />
+      <rect x="176" y="246" width="182" height="8" rx="4" fill="#e8d5ac" />
+      <rect x="176" y="246" width="64" height="8" rx="4" fill="#8f6512" />
+      <rect x="156" y="288" width="104" height="90" rx="16" fill="#e1e8ec" />
+      <circle cx="208" cy="333" r="22" fill="#44627a" />
+      <rect x="274" y="288" width="104" height="90" rx="16" fill="#fffdf9" stroke="#e6dccb" />
+      <rect x="292" y="312" width="68" height="10" rx="5" fill="#efe2e8" />
+      <rect x="292" y="332" width="44" height="10" rx="5" fill="#7a4d66" />
+      <rect x="292" y="352" width="56" height="10" rx="5" fill="#efe2e8" />
+    </svg>
+  ) : art.piece === "neural" ? (
+    <svg class="art-svg" viewBox="0 0 500 300" preserveAspectRatio="xMidYMid slice" role="img" aria-label={`${title}: topología neuronal`}>
+      <defs>
+        <radialGradient id="nn-glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0" stop-color="#a4502f" stop-opacity="0.55" />
+          <stop offset="1" stop-color="#a4502f" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="500" height="300" fill="#1f1b17" />
+      <g stroke="#4a4238" stroke-width="1">
+        <path d="M250 150 L160 90 M250 150 L340 90 M250 150 L160 210 M250 150 L340 210" />
+        <path d="M160 90 L80 50 M160 90 L70 120 M340 90 L420 50 M340 90 L430 120 M160 210 L70 180 M160 210 L90 260 M340 210 L430 180 M340 210 L410 260" />
+      </g>
+      <g stroke="#c99a45" stroke-width="1.5" stroke-dasharray="3 5">
+        <path d="M250 150 L340 90 L420 50" />
+      </g>
+      <circle cx="250" cy="150" r="90" fill="url(#nn-glow)" />
+      <circle cx="250" cy="150" r="58" fill="none" stroke="#6b6052" stroke-dasharray="2 6" />
+      <circle cx="250" cy="150" r="22" fill="#a4502f" />
+      <circle cx="250" cy="150" r="30" fill="none" stroke="#a4502f" stroke-opacity="0.5" />
+      <g fill="#2b2620" stroke-width="2">
+        <circle cx="160" cy="90" r="11" stroke="#5f7c91" />
+        <circle cx="340" cy="90" r="11" stroke="#c99a45" fill="#c99a45" />
+        <circle cx="160" cy="210" r="11" stroke="#5e8478" />
+        <circle cx="340" cy="210" r="11" stroke="#8e6478" />
+      </g>
+      <g fill="#4a4238">
+        <circle cx="80" cy="50" r="5" /><circle cx="70" cy="120" r="5" /><circle cx="430" cy="120" r="5" />
+        <circle cx="70" cy="180" r="5" /><circle cx="90" cy="260" r="5" /><circle cx="430" cy="180" r="5" /><circle cx="410" cy="260" r="5" />
+      </g>
+      <circle cx="420" cy="50" r="6" fill="#f5ead2" />
+      <text x="250" y="285" text-anchor="middle" font-family="Fraunces, serif" font-size="13" fill="#6b6052" letter-spacing="4">J · A · R · V · I · S</text>
+    </svg>
+  ) : art.piece === "chat" ? (
+    <svg class="art-svg" viewBox="0 0 300 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label={`${title}: conversación con el agente`}>
+      <rect width="300" height="500" fill="#f5ead2" />
+      <rect x="96" y="40" width="180" height="58" rx="18" fill="#8f6512" />
+      <rect x="114" y="58" width="120" height="8" rx="4" fill="#f5ead2" />
+      <rect x="114" y="74" width="80" height="8" rx="4" fill="#e2c88f" />
+      <rect x="24" y="116" width="210" height="150" rx="18" fill="#fffdf9" stroke="#e8d5ac" />
+      <rect x="42" y="134" width="96" height="8" rx="4" fill="#c99a45" />
+      <rect x="48" y="226" width="22" height="22" rx="3" fill="#e2c88f" />
+      <rect x="80" y="196" width="22" height="52" rx="3" fill="#c99a45" />
+      <rect x="112" y="176" width="22" height="72" rx="3" fill="#8f6512" />
+      <rect x="144" y="206" width="22" height="42" rx="3" fill="#c99a45" />
+      <rect x="176" y="160" width="22" height="88" rx="3" fill="#a4502f" />
+      <rect x="24" y="282" width="150" height="44" rx="16" fill="#fffdf9" stroke="#e8d5ac" />
+      <rect x="42" y="300" width="96" height="8" rx="4" fill="#e2c88f" />
+      <rect x="132" y="346" width="144" height="44" rx="22" fill="#4e5c2e" />
+      <text x="204" y="373" text-anchor="middle" font-family="Figtree, sans-serif" font-size="13" font-weight="700" fill="#f3eee5">Confirmar</text>
+      <rect x="24" y="346" width="96" height="44" rx="22" fill="none" stroke="#c99a45" stroke-width="2" />
+      <text x="72" y="373" text-anchor="middle" font-family="Figtree, sans-serif" font-size="13" font-weight="600" fill="#7a5410">dry-run</text>
+      <text x="24" y="460" font-family="Fraunces, serif" font-size="30" fill="#5c430d">¿Pausamos</text>
+      <text x="24" y="486" font-family="Fraunces, serif" font-size="30" fill="#5c430d" font-style="italic">la campaña?</text>
+    </svg>
+  ) : art.piece === "signal" ? (
+    <svg class="art-svg" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" role="img" aria-label={`${title}: ondas de señal`}>
+      <rect width="400" height="400" fill="#f4e3d9" />
+      <g fill="none" stroke="#a4502f" stroke-linecap="round">
+        <path d="M40 360 A60 60 0 0 1 100 300" stroke-width="10" />
+        <path d="M40 360 A120 120 0 0 1 160 240" stroke-width="8" stroke-opacity="0.8" />
+        <path d="M40 360 A190 190 0 0 1 230 170" stroke-width="6" stroke-opacity="0.6" />
+        <path d="M40 360 A270 270 0 0 1 310 90" stroke-width="4" stroke-opacity="0.45" />
+        <path d="M40 360 A350 350 0 0 1 390 10" stroke-width="2" stroke-opacity="0.3" />
+      </g>
+      <circle cx="40" cy="360" r="16" fill="#7e3b21" />
+      <g fill="#e2b9a6">
+        <circle cx="300" cy="60" r="6" /><circle cx="350" cy="140" r="6" /><circle cx="250" cy="110" r="6" />
+        <circle cx="330" cy="240" r="6" /><circle cx="200" cy="60" r="6" /><circle cx="370" cy="300" r="6" />
+      </g>
+      <circle cx="270" cy="200" r="13" fill="#4e5c2e" />
+      <circle cx="270" cy="200" r="24" fill="none" stroke="#4e5c2e" stroke-width="2" />
+      <text x="360" y="380" text-anchor="end" font-family="Fraunces, serif" font-size="24" font-style="italic" fill="#7e3b21">Hermes</text>
+    </svg>
+  ) : art.piece === "ledger" ? (
+    <svg class="art-svg" viewBox="0 0 300 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label={`${title}: cadena de bloques y NFC`}>
+      <rect width="300" height="500" fill="#2a1d24" />
+      <g fill="none" stroke="#c99a45" stroke-width="2">
+        <rect x="110" y="40" width="80" height="58" rx="8" />
+        <rect x="110" y="138" width="80" height="58" rx="8" />
+        <rect x="110" y="236" width="80" height="58" rx="8" fill="#c99a45" fill-opacity="0.15" />
+        <path d="M150 98 V138 M150 196 V236" stroke-dasharray="3 4" />
+      </g>
+      <g fill="#c99a45">
+        <rect x="126" y="56" width="48" height="5" rx="2.5" /><rect x="126" y="68" width="30" height="5" rx="2.5" fill-opacity="0.5" />
+        <rect x="126" y="154" width="48" height="5" rx="2.5" /><rect x="126" y="166" width="30" height="5" rx="2.5" fill-opacity="0.5" />
+        <rect x="126" y="252" width="48" height="5" rx="2.5" /><rect x="126" y="264" width="30" height="5" rx="2.5" fill-opacity="0.5" />
+      </g>
+      <g fill="none" stroke="#e2c88f" stroke-linecap="round">
+        <path d="M124 380 A36 36 0 0 1 176 380" stroke-width="3" />
+        <path d="M108 366 A58 58 0 0 1 192 366" stroke-width="2.5" stroke-opacity="0.7" />
+        <path d="M92 352 A80 80 0 0 1 208 352" stroke-width="2" stroke-opacity="0.45" />
+      </g>
+      <circle cx="150" cy="400" r="9" fill="#c99a45" />
+      <text x="150" y="462" text-anchor="middle" font-family="Fraunces, serif" font-size="22" letter-spacing="6" fill="#e2c88f">LUXITY</text>
+    </svg>
+  ) : art.piece === "still" ? (
+    <svg class="art-svg" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" role="img" aria-label={`${title}: bodegón geométrico`}>
+      <rect width="400" height="400" fill="#e8eadb" />
+      <rect y="268" width="400" height="132" fill="#c9d0ae" />
+      <ellipse cx="150" cy="290" rx="98" ry="22" fill="#fffdf9" />
+      <ellipse cx="150" cy="286" rx="70" ry="14" fill="#f3eee5" />
+      <circle cx="128" cy="262" r="28" fill="#a4502f" />
+      <circle cx="170" cy="266" r="22" fill="#c99a45" />
+      <path d="M128 236 C 132 222, 144 218, 150 220" fill="none" stroke="#4e5c2e" stroke-width="4" stroke-linecap="round" />
+      <path d="M270 160 C 240 200, 240 270, 290 290 C 340 270, 340 200, 310 160 Z" fill="#7d8b55" />
+      <rect x="282" y="140" width="16" height="22" rx="4" fill="#4e5c2e" />
+      <path d="M300 152 C 320 130, 342 132, 350 140 C 330 150, 316 154, 300 152 Z" fill="#4e5c2e" />
+      <rect x="320" y="250" width="54" height="44" rx="6" fill="#fffdf9" stroke="#c9d0ae" />
+      <rect x="330" y="262" width="34" height="5" rx="2.5" fill="#7d8b55" />
+      <rect x="330" y="273" width="22" height="5" rx="2.5" fill="#c99a45" />
+      <circle cx="80" cy="80" r="34" fill="#fffdf9" fill-opacity="0.7" />
+    </svg>
+  ) : (
+    <svg class="art-svg" viewBox="0 0 300 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label={`${title}: juegos en píxeles`}>
+      <rect width="300" height="500" fill="#24302c" />
+      <g fill="#3f6e62" fill-opacity="0.35">
+        {Array.from({ length: 12 }, (_, r) => Array.from({ length: 7 }, (_, c) => <rect x={24 + c * 38} y={30 + r * 38} width="34" height="34" rx="4" />))}
+      </g>
+      <g fill="#5e8478">
+        <rect x="24" y="68" width="34" height="34" rx="4" /><rect x="62" y="68" width="34" height="34" rx="4" /><rect x="100" y="68" width="34" height="34" rx="4" />
+        <rect x="100" y="106" width="34" height="34" rx="4" /><rect x="100" y="144" width="34" height="34" rx="4" /><rect x="138" y="144" width="34" height="34" rx="4" />
+      </g>
+      <rect x="176" y="144" width="34" height="34" rx="4" fill="#dfeae5" />
+      <rect x="214" y="68" width="34" height="34" rx="4" fill="#a4502f" />
+      <g font-family="Fraunces, serif" font-size="18" text-anchor="middle">
+        <rect x="24" y="258" width="72" height="72" rx="8" fill="#c99a45" /><text x="60" y="301" fill="#2b2620">2048</text>
+        <rect x="100" y="258" width="72" height="72" rx="8" fill="#e2c88f" /><text x="136" y="301" fill="#5c430d">512</text>
+      </g>
+      <g fill="#dfeae5" transform="translate(190 380)">
+        <rect x="12" y="0" width="8" height="8" /><rect x="52" y="0" width="8" height="8" />
+        <rect x="20" y="8" width="8" height="8" /><rect x="44" y="8" width="8" height="8" />
+        <rect x="12" y="16" width="48" height="8" />
+        <rect x="4" y="24" width="16" height="8" /><rect x="28" y="24" width="16" height="8" /><rect x="52" y="24" width="16" height="8" />
+        <rect x="0" y="32" width="72" height="8" />
+        <rect x="0" y="40" width="8" height="8" /><rect x="12" y="40" width="48" height="8" /><rect x="64" y="40" width="8" height="8" />
+        <rect x="0" y="48" width="8" height="8" /><rect x="12" y="48" width="8" height="8" /><rect x="52" y="48" width="8" height="8" /><rect x="64" y="48" width="8" height="8" />
+      </g>
+    </svg>
+  )
+}
+
+<style>
+  .art-img,
+  .art-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+</style>

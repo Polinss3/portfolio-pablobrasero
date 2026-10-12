@@ -1,59 +1,112 @@
 ---
+import "@/styles/global.css";
+import Icon, { type IconName } from "@/components/Icon.astro";
+import { PROFILE } from "@/data/profile";
+
 interface Props {
-  // typescript
   title: string;
+  description?: string;
+  flush?: boolean;
+  image?: string;
 }
 
-const { title } = Astro.props;
-import Header from "../components/layout/Header.astro";
-import Footer from "../components/layout/Footer.astro";
-import "@fontsource-variable/onest";
-import "@fontsource-variable/fira-code";
+const {
+  title,
+  description = "Pablo Brasero Martínez: ingeniero informático y Senior Consultant. Currículum y showroom de proyectos: apps en el App Store, plataformas propias y agentes de IA.",
+  flush = false,
+  image = "/gallery/miko/banner.webp",
+} = Astro.props;
+
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+
+const NAV: { group: string; items: { href: string; label: string; short: string; icon: IconName }[] }[] = [
+  {
+    group: "Currículum",
+    items: [
+      { href: "/", label: "Inicio", short: "Inicio", icon: "home" },
+      { href: "/#trayectoria", label: "Trayectoria", short: "CV", icon: "briefcase" },
+    ],
+  },
+  {
+    group: "Showroom",
+    items: [
+      { href: "/galeria", label: "Galería", short: "Galería", icon: "frame" },
+      { href: "/proyectos", label: "Todos los proyectos", short: "Proyectos", icon: "grid" },
+    ],
+  },
+];
+
+function isActive(href: string) {
+  if (href === "/") return path === "/";
+  if (href.startsWith("/#")) return false;
+  return path === href || path.startsWith(href + "/");
+}
+
+const fullTitle = title === PROFILE.name ? title : `${title} · ${PROFILE.short}`;
 ---
 
 <!doctype html>
-<html lang="es" >
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Astro description" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/LogoCuadrado.ico" />
-    <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#ece5d8" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, PROFILE.site)} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Figtree:wght@400;500;600;700&display=swap"
+    />
+    <title>{fullTitle}</title>
   </head>
-  <body class="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-600 text-black dark:text-white">
-    <Header />
-    <slot />
-    <Footer />
+  <body class="min-h-screen">
+    <div class="app">
+      <aside class="side">
+        <a href="/" class="side-brand" aria-label="Inicio">
+          <span class="side-brand-mark">P</span>
+          <span class="side-brand-text">
+            <strong>{PROFILE.short}</strong>
+            <span>Currículum y showroom</span>
+          </span>
+        </a>
+        <nav aria-label="Principal">
+          {
+            NAV.map(({ group, items }) => (
+              <div>
+                <p class="nav-group">{group}</p>
+                {items.map((item) => (
+                  <a href={item.href} class:list={["nav-link", { "is-active": isActive(item.href) }]} aria-current={isActive(item.href) ? "page" : undefined}>
+                    <Icon name={item.icon} />
+                    <span class="nav-label-long hidden min-[1101px]:inline">{item.label}</span>
+                    <span class="min-[1101px]:hidden">{item.short}</span>
+                  </a>
+                ))}
+              </div>
+            ))
+          }
+        </nav>
+        <div class="side-foot">
+          <img src={PROFILE.photo} alt="" class="side-avatar" width="32" height="32" />
+          <p class="side-user">
+            Pablo<span>Madrid</span>
+          </p>
+          <a href={PROFILE.linkedin} class="side-action" aria-label="LinkedIn" target="_blank" rel="noopener">
+            <Icon name="linkedin" size={18} />
+          </a>
+          <a href={PROFILE.cv} class="side-action" aria-label="Descargar CV en PDF" download>
+            <Icon name="download" size={18} />
+          </a>
+        </div>
+      </aside>
+      <main class:list={["content", { "content-flush": flush }]}>
+        <slot />
+      </main>
+    </div>
   </body>
 </html>
-<style>
-  :root {
-    color-scheme: light dark;
-  }
-
-  html {
-    font-family: "Onest Variable", system-ui, sans-serif;
-    min-height: 100vh;
-  }
-
-  body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    scroll-behavior: smooth;
-  }
-
-  @media (prefwers-reduced-motion: reduce) {
-    body {
-      scroll-behavior: auto;
-    }
-  }
-  .bg-white {
-    background-image: linear-gradient(to top left, #F3F4F6, #D1D5DB);
-  }
-  .dark .bg-white {
-    background-image: linear-gradient(to bottom right, #1F2937, #4B5563);
-  }
-</style>

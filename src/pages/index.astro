@@ -1,95 +1,299 @@
 ---
-import Layout from "../layouts/Layout.astro";
-// COMPONENTS
-import Projects from "../components/sections/Projects.astro";
-import Badge from "../components/ui/Badge.astro";
-import SocialPill from "../components/ui/SocialPill.astro";
-import Experience from "../components/sections/Experience.astro";
-import SectionContainer from "../components/layout/SectionContainer.astro";
-import Education from "../components/sections/Education.astro";
-import AboutMe from "../components/sections/AboutMe.astro";
-// ICONS
-import LinkedIn from "@/components/icons/LinkedIn.astro";
-import GitHub from "@/components/icons/tags/GitHub.astro";
-import Briefcase from "@/components/icons/Briefcase.astro";
-import DescargaArchivo from "@/components/icons/DescargaArchivo.astro";
-import Terminal from "@/components/icons/Terminal.astro";
-import Books from "@/components/icons/Books.astro";
-import Profile from "@/components/icons/Profile.astro";
+import Layout from "@/layouts/Layout.astro";
+import Icon from "@/components/Icon.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import { ABOUT, EDUCATION, EXPERIENCE, PROFILE, SERVICES, SKILLS } from "@/data/profile";
+import { PROJECTS, TINT } from "@/data/projects";
+
+const published = PROJECTS.filter((p) => p.room === 1);
+const live = PROJECTS.filter((p) => p.status.tone === "live" || p.status.tone === "prod").length;
+const hangers = PROJECTS.filter((p) => p.art.kind === "image").slice(0, 5);
+
+// Desde las prácticas en Total Renting (julio de 2023).
+const start = new Date(2023, 6, 1);
+const years = Math.floor((Date.now() - start.getTime()) / (365.25 * 24 * 3600 * 1000));
+
+const STATS = [
+  { value: `${years}+`, label: "años como desarrollador", tint: TINT.clay },
+  { value: String(published.length), label: "apps en el App Store", tint: TINT.olive },
+  { value: String(live), label: "proyectos en producción", tint: TINT.slate },
+  { value: "114", label: "juegos publicados en una sola app", tint: TINT.plum },
+];
 ---
 
-<Layout title="Portfolio de Pablo Brasero - Desarrollador y programador Web">
-  <main
-    class="px-10 flex flex-col justify-center content-center items-center"
-  >
-    <SectionContainer id="top" class="pt-48 pb-32">
-      <h1
-        class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold flex flex-row flex-wrap gap-x-4 pb-4"
-      >
-        Hi, I'm Pablo Brasero
-        <a
-          href="https://www.linkedin.com/in/pablo-brasero-mart%C3%ADnez/"
-          target="_blank"
-          rel="noopener"
-          class="flex justify-center items-center"
-        >
-          <Badge>Ready for everything</Badge>
-        </a>
-      </h1>
-      <h2 class="text-lg sm:text-2xl text-wrap max-w-[700px]">
-        <span>+4 years of experience. </span><span
-          class="bg-gradient-to-b from-cyan-900 to-cyan-500 dark:from-cyan-50 dark:to-cyan-400 bg-clip-text text-transparent"
-          >Web developer and programmer.
-        </span><span>Madrid, Spain.</span>
-        <span></span>Especialized in creating solutions
-      </h2>
+<Layout title={PROFILE.name}>
+  <header class="page-head">
+    <div>
+      <p class="eyebrow">Currículum · {PROFILE.location}</p>
+      <h1>{PROFILE.name}</h1>
+    </div>
+    <div class="page-head-right">
+      <span class="chip"><span class="chip-dot"></span>{PROFILE.role}</span>
+      <a href={PROFILE.linkedin} class="round-btn" aria-label="LinkedIn" target="_blank" rel="noopener"><Icon name="linkedin" /></a>
+      <a href={PROFILE.github} class="round-btn" aria-label="GitHub" target="_blank" rel="noopener"><Icon name="github" /></a>
+    </div>
+  </header>
 
-      <nav class="flex flex-wrap gap-x-4 gap-y-4 mt-6">
-        <SocialPill href="/CurrículumPabloBrasero.pdf" download>
-          <DescargaArchivo class="size-6" />
-          Curriculum Vitae
-        </SocialPill>
-        <SocialPill
-          href="https://www.linkedin.com/in/pablo-brasero-mart%C3%ADnez/"
-        >
-          <LinkedIn class="size-6" />
-          LinkedIn
-        </SocialPill>
-        <SocialPill href="https://github.com/Polinss3">
-          <GitHub class="size-6" />
-          Github
-        </SocialPill>
-      </nav>
-    </SectionContainer>
+  <!-- Presentación -->
+  <section class="bento">
+    <article class="tile tile-lg hero col-span-2 lg:col-span-8">
+      <div class="flex flex-col gap-6 md:flex-row md:items-center">
+        <img src={PROFILE.photo} alt="Retrato de Pablo Brasero" class="hero-photo" width="148" height="148" />
+        <div>
+          <p class="eyebrow" style="color: var(--clay)">Hola, soy Pablo</p>
+          <p class="mt-3 font-display text-[26px] font-medium leading-[1.14] tracking-tight sm:text-[30px] xl:text-[36px]">
+            {PROFILE.tagline}
+          </p>
+        </div>
+      </div>
+      <div class="mt-6 flex flex-wrap gap-2">
+        <a href="/galeria" class="btn btn-primary"><Icon name="frame" />Entrar en la galería</a>
+        <a href={PROFILE.cv} class="btn btn-ghost" download><Icon name="download" />Currículum en PDF</a>
+        <a href="#trayectoria" class="btn btn-ghost">Trayectoria<Icon name="arrow-right" /></a>
+      </div>
+    </article>
 
-    <SectionContainer id="experience" class="pt-18">
-      <h2 class="text-2xl font-semibold mb-6 flex gap-x-3 items-center">
-        <Briefcase class="size-7" />Experience
-      </h2>
-      <Experience />
-    </SectionContainer>
+    <div class="col-span-2 grid grid-cols-2 lg:col-span-4" style="gap: inherit">
+      {
+        STATS.map((s) => (
+          <div class="tile tile-sm justify-between">
+            <span class="dot" style={`background:${s.tint.fg}`} />
+            <div class="mt-6">
+              <p class="big-num text-[40px]" style={`color:${s.tint.fg}`}>{s.value}</p>
+              <p class="mt-2 text-[13px] leading-snug text-dim">{s.label}</p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
 
-    <SectionContainer id="projects" class="pt-40 pb-20">
-      <h2 class="text-2xl font-semibold mb-6 flex gap-x-3 items-center">
-        <Terminal class="size-7" />Projects
-      </h2>
-      <Projects />
-    </SectionContainer>
+    <article class="tile tile-lg col-span-2 lg:col-span-7">
+      <div class="tile-head">
+        <span class="tile-title">
+          <span class="tile-icon" style={`background:${TINT.clay.bg};color:${TINT.clay.fg}`}><Icon name="user" /></span>
+          Sobre mí
+        </span>
+      </div>
+      <div class="prose-soft">
+        {ABOUT.map((p) => <p>{p}</p>)}
+      </div>
+    </article>
 
-    <SectionContainer id="about-me" class="pt-20 pb-28">
-      <h2 class="text-2xl font-semibold mb-6 flex gap-x-3 items-center">
-        <Profile class="size-7" />About Me
-      </h2>
-      <AboutMe />
-    </SectionContainer>
+    <article class="tile tile-lg tile-accent col-span-2 lg:col-span-5">
+      <div class="tile-head">
+        <span class="tile-title">
+          <span class="tile-icon" style={`background:#d6dbc0;color:${TINT.olive.fg}`}><Icon name="sparkles" /></span>
+          Lo que hago
+        </span>
+      </div>
+      <ul class="space-y-2.5">
+        {
+          SERVICES.map((s) => (
+            <li class="flex items-center text-[15px] text-soft">
+              <span class="dot mr-3" style={`background:${TINT.olive.fg}`} />
+              {s}
+            </li>
+          ))
+        }
+      </ul>
+      <p class="tile-foot text-[13px] leading-relaxed text-dim" style="padding-top: 18px">
+        Del diseño al App Store: producto, interfaz, backend, pagos, publicidad y marketing.
+      </p>
+    </article>
+  </section>
 
-    <SectionContainer>
-      <h2 class="text-2xl font-semibold mb-6 flex gap-x-3 items-center">
-        <Books class="size-7" />Education
-      </h2>
-      <Education />
-    </SectionContainer>
-  </main>
+  <!-- Trayectoria -->
+  <div class="section-head" id="trayectoria">
+    <div>
+      <p class="eyebrow">Experiencia</p>
+      <h2>Trayectoria</h2>
+    </div>
+    <a href={PROFILE.linkedin} class="chip" target="_blank" rel="noopener"><Icon name="linkedin" />Ver en LinkedIn</a>
+  </div>
+
+  <section class="bento">
+    {
+      EXPERIENCE.map((job, i) => (
+        <article class:list={["tile tile-lg col-span-2", i === 0 ? "lg:col-span-7" : i === 1 ? "lg:col-span-5" : "lg:col-span-12"]}>
+          <div class="tile-head">
+            <span class="tile-title">
+              <span class="tile-icon" style={`background:${TINT[job.tint].bg};color:${TINT[job.tint].fg}`}>
+                <Icon name="briefcase" />
+              </span>
+              {job.company}
+            </span>
+            <span class="pill" style={`background:${TINT[job.tint].bg};color:${TINT[job.tint].fg}`}>
+              {job.period}
+            </span>
+          </div>
+          <p class="text-[15px] leading-relaxed text-soft">{job.summary}</p>
+          <p class="mt-1 text-xs text-dim">
+            {job.place} · {job.mode}
+          </p>
+          <div class:list={["timeline mt-5", { "sm:flex sm:gap-10": i === 2 }]} style={`color:${TINT[job.tint].fg}`}>
+            {job.roles.map((role, r) => (
+              <div class:list={["timeline-role", { "is-current": i === 0 && r === 0 }]}>
+                <p class="text-[15px] font-semibold text-ink">{role.title}</p>
+                <p class="text-[13px] text-dim">
+                  {role.period} · {role.duration}
+                </p>
+              </div>
+            ))}
+          </div>
+          {job.highlights.length > 0 && (
+            <ul class="tile-foot space-y-1.5 border-t border-line" style="margin-top: 18px; padding-top: 14px">
+              {job.highlights.map((h) => (
+                <li class="flex text-sm text-soft">
+                  <span class="mr-2 text-dim">—</span>
+                  {h}
+                </li>
+              ))}
+            </ul>
+          )}
+        </article>
+      ))
+    }
+  </section>
+
+  <!-- Formación -->
+  <div class="section-head" id="formacion">
+    <div>
+      <p class="eyebrow">Formación</p>
+      <h2>Estudios</h2>
+    </div>
+  </div>
+  <section class="bento">
+    {
+      EDUCATION.map((e) => (
+        <article class="tile col-span-2 lg:col-span-4">
+          <div class="tile-head">
+            <span class="tile-icon" style={`background:${TINT[e.tint].bg};color:${TINT[e.tint].fg}`}>
+              <Icon name="graduation" />
+            </span>
+            <span class="tile-label">{e.period}</span>
+          </div>
+          <p class="font-display text-[19px] font-medium leading-snug tracking-tight">{e.title}</p>
+          <p class="mt-1 text-sm text-dim">{e.school}</p>
+        </article>
+      ))
+    }
+  </section>
+
+  <!-- Stack -->
+  <div class="section-head" id="stack">
+    <div>
+      <p class="eyebrow">Herramientas</p>
+      <h2>Con qué trabajo</h2>
+    </div>
+  </div>
+  <section class="bento">
+    {
+      SKILLS.map((g, i) => (
+        <article class:list={["tile col-span-2", i < 2 ? "lg:col-span-6" : "lg:col-span-4"]}>
+          <div class="tile-head">
+            <span class="tile-title">
+              <span class="dot mr-2" style={`background:${TINT[g.tint].fg}`} />
+              {g.group}
+            </span>
+            <span class="tile-label">{g.items.length}</span>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            {g.items.map((s) => (
+              <span class="tag">{s}</span>
+            ))}
+          </div>
+        </article>
+      ))
+    }
+  </section>
+
+  <!-- Showroom -->
+  <div class="section-head" id="showroom">
+    <div>
+      <p class="eyebrow">Showroom</p>
+      <h2>Publicado en el App Store</h2>
+    </div>
+    <a href="/proyectos" class="chip"><Icon name="grid" />Todos los proyectos</a>
+  </div>
+
+  <a href="/galeria" class="tile tile-lg tile-clay invite">
+    <div class="invite-text">
+      <p class="eyebrow" style="color: var(--clay)">Exposición permanente</p>
+      <p class="mt-2 font-display text-[28px] font-medium leading-tight tracking-tight sm:text-[34px]">
+        Recorre mis proyectos como si fueran cuadros
+      </p>
+      <p class="mt-3 max-w-md text-[15px] leading-relaxed text-soft">
+        Cuatro salas, {PROJECTS.length} obras. Acércate a cada una para leer su cartela y ver cómo está hecha.
+      </p>
+      <span class="btn btn-primary mt-5 self-start"><Icon name="walk" />Entrar en la galería</span>
+    </div>
+    <div class="invite-wall" aria-hidden="true">
+      {
+        hangers.map((p, i) => (
+          <span class={`mini-frame mini-${p.art.kind === "image" ? p.art.shape : "square"} mini-f${i}`}>
+            <img src={(p.art as { src: string }).src} alt="" loading="lazy" />
+          </span>
+        ))
+      }
+    </div>
+  </a>
+
+  <section class="cardgrid carousel-mobile mt-[14px]">
+    {published.map((p) => <ProjectCard project={p} />)}
+  </section>
+
+  <footer class="mt-12 flex flex-col justify-between gap-2 border-t border-line pt-5 text-[13px] text-dim sm:flex-row">
+    <span>© {new Date().getFullYear()} {PROFILE.name}</span>
+    <span>Hecho con Astro y el sistema de diseño de Life Dashboard</span>
+  </footer>
 </Layout>
 
+<style>
+  .hero-photo {
+    width: 148px; height: 148px; flex-shrink: 0; border-radius: 28px; object-fit: cover;
+    box-shadow: 0 0 0 6px var(--raised), 0 0 0 7px var(--line);
+  }
 
+  .invite {
+    display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; overflow: hidden;
+  }
+  .invite-text { display: flex; flex-direction: column; }
+  .invite:hover .btn-primary { background: var(--clay-dark); }
+
+  .invite-wall {
+    position: relative; display: flex; align-items: center; justify-content: center; gap: 18px;
+    min-height: 220px; border-radius: 14px; padding: 24px 12px 30px;
+    background:
+      radial-gradient(ellipse 40% 60% at 20% 0%, rgba(255, 244, 222, 0.9), transparent 70%),
+      radial-gradient(ellipse 40% 60% at 80% 0%, rgba(255, 244, 222, 0.9), transparent 70%),
+      linear-gradient(#efe4d6, #e6d8c6);
+    box-shadow: inset 0 -26px 0 #d9c3a8, inset 0 -28px 0 #c9ae8c;
+  }
+  .mini-frame {
+    display: block; flex-shrink: 0; padding: 6px; background: #fffdf9; border: 5px solid #3a2f26;
+    box-shadow: 0 10px 18px -8px rgba(43, 38, 32, 0.45);
+    transition: transform 0.3s ease;
+  }
+  .mini-frame img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+  .mini-tall { width: 64px; height: 104px; }
+  .mini-phone { width: 60px; height: 112px; }
+  .mini-wide { width: 128px; height: 80px; }
+  .mini-square { width: 90px; height: 90px; }
+  .mini-f0 { border-color: #b8893a; }
+  .mini-f2 { border-color: #6e4a30; }
+  .mini-f4 { display: none; }
+  .invite:hover .mini-frame { transform: translateY(-4px); }
+  .invite:hover .mini-f1 { transform: translateY(-4px) rotate(-1deg); }
+
+  @media (min-width: 900px) {
+    .invite { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; }
+    .mini-f4 { display: block; }
+  }
+  @media (max-width: 640px) {
+    .hero-photo { width: 96px; height: 96px; border-radius: 22px; }
+    .hero .btn-primary { flex: 1 1 100%; }
+    .hero .btn-ghost { flex: 1 1 0; }
+    .mini-f3 { display: none; }
+    .mini-wide { width: 96px; height: 62px; }
+  }
+</style>

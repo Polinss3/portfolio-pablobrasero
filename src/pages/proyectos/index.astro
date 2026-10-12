@@ -1,0 +1,61 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Icon from "@/components/Icon.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import { PROJECTS, ROOMS } from "@/data/projects";
+
+const FILTERS = [{ id: "all", label: "Todos" }, ...ROOMS.map((r) => ({ id: String(r.id), label: r.title }))];
+---
+
+<Layout title="Proyectos" description="Todos los proyectos de Pablo Brasero: apps en el App Store, plataformas propias, comercio electrónico y agentes de IA.">
+  <header class="page-head">
+    <div>
+      <p class="eyebrow">Showroom · Catálogo</p>
+      <h1>Todos los proyectos</h1>
+    </div>
+    <div class="page-head-right">
+      <a href="/galeria" class="btn btn-primary"><Icon name="frame" />Ver en la galería</a>
+    </div>
+  </header>
+
+  <div class="filters" role="group" aria-label="Filtrar por sala">
+    {
+      FILTERS.map((f, i) => (
+        <button type="button" class:list={["filter", { "is-active": i === 0 }]} data-filter={f.id} aria-pressed={i === 0 ? "true" : "false"}>
+          {f.label}
+          <span class="filter-count">{f.id === "all" ? PROJECTS.length : PROJECTS.filter((p) => String(p.room) === f.id).length}</span>
+        </button>
+      ))
+    }
+  </div>
+
+  <section class="cardgrid" id="catalog">
+    {PROJECTS.map((p) => <ProjectCard project={p} />)}
+  </section>
+</Layout>
+
+<style>
+  .filters { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 2px; }
+  .filter {
+    display: inline-flex; align-items: center; flex-shrink: 0; height: 38px; padding: 0 14px; border-radius: 19px;
+    border: 1px solid var(--line-strong); background: var(--panel); color: var(--soft); font-size: 13px; font-weight: 500; cursor: pointer;
+  }
+  .filter:hover { background: var(--raised); }
+  .filter.is-active { background: var(--ink); border-color: var(--ink); color: #fffdf9; }
+  .filter-count { margin-left: 8px; font-size: 11px; font-weight: 700; opacity: 0.6; }
+</style>
+
+<script>
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-filter]"));
+  const cards = Array.from(document.querySelectorAll<HTMLElement>("#catalog [data-room]"));
+  buttons.forEach((btn) =>
+    btn.addEventListener("click", () => {
+      const f = btn.dataset.filter;
+      buttons.forEach((b) => {
+        b.classList.toggle("is-active", b === btn);
+        b.setAttribute("aria-pressed", String(b === btn));
+      });
+      cards.forEach((c) => (c.hidden = f !== "all" && c.dataset.room !== f));
+    }),
+  );
+</script>
