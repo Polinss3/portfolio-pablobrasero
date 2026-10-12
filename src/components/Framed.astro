@@ -1,0 +1,19 @@
+---
+// Un proyecto colgado: marco + paspartú + lienzo.
+import ProjectArt from "./ProjectArt.astro";
+import type { Project } from "@/data/projects";
+
+interface Props {
+  project: Project;
+  eager?: boolean;
+  class?: string;
+}
+
+const { project, eager, class: className } = Astro.props;
+---
+
+<span class:list={["frame", `frame-${project.frame}`, `shape-${project.art.shape}`, className]}>
+  <span class="frame-mat">
+    <span class="frame-canvas"><ProjectArt project={project} eager={eager} /></span>
+  </span>
+</span>

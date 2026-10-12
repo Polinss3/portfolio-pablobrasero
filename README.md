@@ -1,59 +1,34 @@
-# Portfolio Personal
+# Portfolio · Pablo Brasero
 
-Este es mi portfolio personal construido con Astro, un moderno generador de sitios estáticos.
+Currículum y showroom de proyectos, construido con Astro y Tailwind CSS sobre el
+sistema de diseño de **Life Dashboard** ("lino, arcilla y oliva": Fraunces +
+Figtree, tonos tierra, tiles redondeados y barra lateral).
 
-## 🚀 Características
+## Páginas
 
-- 🎨 Diseño moderno y responsive
-- 🌙 Modo oscuro/claro
-- ⚡ Rendimiento optimizado
-- 📱 Totalmente responsive
-- 🔍 SEO optimizado
+| Ruta | Contenido |
+| --- | --- |
+| `/` | Currículum: presentación, trayectoria, formación, herramientas y apps destacadas |
+| `/galeria` | Galería interactiva: los proyectos cuelgan como cuadros en cuatro salas. El scroll vertical recorre la pared, ← → saltan de obra en obra, cada cuadro abre un visor y se pueden apagar las luces |
+| `/proyectos` | Catálogo con filtro por sala |
+| `/proyectos/[slug]` | Ficha de cada proyecto |
 
-## 🛠️ Tecnologías
+`/galeria#miko` abre directamente el visor de una obra. Las rutas de la versión
+anterior (`/about`, `/projects/*`) redirigen a las nuevas.
 
-- [Astro](https://astro.build/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
+## Dónde se edita
 
-## 📦 Estructura del Proyecto
+- `src/data/profile.ts`: datos del currículum (trayectoria según LinkedIn).
+- `src/data/projects.ts`: catálogo de proyectos. Cada entrada define su sala,
+  marco (`gilt`, `oak`, `walnut`, `black`, `white`), lienzo (captura o pieza
+  generativa en SVG), cartela, textos y enlaces.
+- `public/gallery/<proyecto>/`: capturas en WebP.
+- `src/styles/global.css`: tokens y piezas del sistema de diseño, y los marcos.
 
+## Desarrollo
+
+```bash
+pnpm install
+pnpm dev        # http://localhost:4321
+pnpm build      # astro check + build estático en dist/
 ```
-src/
-├── components/     # Componentes reutilizables
-│   ├── layout/    # Componentes de layout
-│   ├── ui/        # Componentes de UI
-│   ├── sections/  # Secciones principales
-│   └── buttons/   # Componentes de botones
-├── pages/         # Páginas de la aplicación
-├── styles/        # Estilos globales
-├── utils/         # Funciones de utilidad
-├── config/        # Configuración del sitio
-├── types/         # Definiciones de tipos
-└── i18n/          # Internacionalización
-```
-
-## 🚀 Cómo Empezar
-
-1. Clona el repositorio
-2. Instala las dependencias:
-   ```bash
-   npm install
-   ```
-3. Inicia el servidor de desarrollo:
-   ```bash
-   npm run dev
-   ```
-4. Abre [http://localhost:3000](http://localhost:3000) en tu navegador
-
-## 📝 Scripts Disponibles
-
-- `npm run dev` - Inicia el servidor de desarrollo
-- `npm run build` - Construye el sitio para producción
-- `npm run preview` - Previsualiza el sitio construido
-- `npm run format` - Formatea el código
-- `npm run lint` - Ejecuta el linter
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para más detalles.

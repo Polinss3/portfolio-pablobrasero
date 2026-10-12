@@ -1,0 +1,52 @@
+---
+import ProjectArt from "./ProjectArt.astro";
+import Icon from "./Icon.astro";
+import { STATUS_TONE, TINT, ROOMS, type Project } from "@/data/projects";
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const tone = STATUS_TONE[project.status.tone];
+const room = ROOMS.find((r) => r.id === project.room)!;
+---
+
+<a href={`/proyectos/${project.slug}`} class="tile project-card" data-room={project.room} data-tone={project.status.tone}>
+  <div class="project-card-art" style={`background:${TINT[project.tint].bg}`}>
+    <ProjectArt project={project} />
+  </div>
+  <div class="tile-head" style="margin-top: 14px; margin-bottom: 6px">
+    <span class="pill" style={`background:${tone.bg};color:${tone.fg}`}>{project.status.label}</span>
+    <span class="tile-label">Sala {room.numeral} · {project.year}</span>
+  </div>
+  <h3 class="font-display text-[21px] font-medium leading-tight tracking-tight">{project.title}</h3>
+  <p class="mt-1 text-sm text-dim">{project.kicker}</p>
+  <div class="tile-foot flex items-center justify-between gap-2" style="padding-top: 14px">
+    <span class="flex min-w-0 flex-wrap gap-1.5">
+      {project.stack.slice(0, 3).map((s) => <span class="tag">{s}</span>)}
+    </span>
+    <span class="project-card-go" aria-hidden="true"><Icon name="arrow-right" size={16} /></span>
+  </div>
+</a>
+
+<style>
+  .project-card { padding: 10px 10px 16px; }
+  .project-card .tile-head,
+  .project-card h3,
+  .project-card p,
+  .project-card .tile-foot { padding-left: 8px; padding-right: 8px; }
+  .project-card-art {
+    position: relative; overflow: hidden; border-radius: 12px; aspect-ratio: 16 / 10;
+  }
+  .project-card-art :global(img),
+  .project-card-art :global(svg) { transition: transform 0.4s ease; }
+  .project-card:hover .project-card-art :global(img),
+  .project-card:hover .project-card-art :global(svg) { transform: scale(1.03); }
+  .project-card-go {
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    width: 32px; height: 32px; border-radius: 16px; background: var(--raised); color: var(--soft);
+    transition: background-color 0.15s, color 0.15s;
+  }
+  .project-card:hover .project-card-go { background: var(--clay); color: #fff8f0; }
+</style>
